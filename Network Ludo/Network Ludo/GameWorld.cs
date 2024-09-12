@@ -1,13 +1,47 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
-namespace Network_Ludo
+namespace Nework_Ludo
 {
+    enum GameState
+    {
+        Shop,
+        Combat
+    }
+
     public class GameWorld : Game
     {
         private GraphicsDeviceManager _graphics;
+
         private SpriteBatch _spriteBatch;
+
+        private float timeElapsed;
+        private GameState _state;
+
+        public static SpriteFont font;
+
+        public List<GameObject> GameObjects
+        {
+            get
+            {
+                return gameObjects;
+            }
+        }
+        private static GameWorld instance;
+
+        public static GameWorld Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new GameWorld();
+                }
+                return instance;
+            }
+        }
 
         public GameWorld()
         {
@@ -16,9 +50,18 @@ namespace Network_Ludo
             IsMouseVisible = true;
         }
 
+        public Dictionary<string, Texture2D> sprites { get; private set; } = new Dictionary<string, Texture2D>();
+
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            foreach (GameObject go in gameObjects)
+            {
+                go.Awake();
+            }
+
+            _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
+            _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -27,24 +70,61 @@ namespace Network_Ludo
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            foreach (GameObject go in gameObjects)
+            {
+                go.Start();
+            }
+            font = Content.Load<SpriteFont>("text2");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
+
+            Cleanup();
+        }
+
+        private void Cleanup()
+        {
+            // Adding newly instantiated GameObjects
+            for (int i = 0; i < newGameObjects.Count; i++)
+            {
+                gameObjects.Add(newGameObjects[i]);
+                newGameObjects[i].Awake(); // Initializing new GameObjects
+                newGameObjects[i].Start(); // Starting new GameObjects
+            }
+
+            // Removing destroyed GameObjects
+            for (int i = 0; i < destroyedGameObjects.Count; i++)
+            {
+                gameObjects.Remove(destroyedGameObjects[i]);
+            }
+            destroyedGameObjects.Clear(); // Clearing destroyed GameObjects list
+            newGameObjects.Clear(); // Clearing new GameObjects list
+        }
+
+        public void Instantiate(GameObject go)
+        {
+            newGameObjects.Add(go);
+        }
+
+        public void Destroy(GameObject go)
+        {
+            destroyedGameObjects.Add(go);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack);
+
+            foreach (GameObject go in gameObjects)
+            {
+                go.Draw(_spriteBatch);
+            }
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
