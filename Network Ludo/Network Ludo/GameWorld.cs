@@ -1,14 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ComponentPattern;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Nework_Ludo
 {
     enum GameState
     {
-        Shop,
-        Combat
+        Player1,
+        Player2,
+        Player3,
+        Player4
     }
 
     public class GameWorld : Game
@@ -16,6 +18,12 @@ namespace Nework_Ludo
         private GraphicsDeviceManager _graphics;
 
         private SpriteBatch _spriteBatch;
+
+        private List<GameObject> gameObjects = new List<GameObject>();
+
+        private List<GameObject> newGameObjects = new List<GameObject>();
+
+        private List<GameObject> destroyedGameObjects = new List<GameObject>();
 
         private float timeElapsed;
         private GameState _state;
@@ -74,7 +82,7 @@ namespace Nework_Ludo
             {
                 go.Start();
             }
-            font = Content.Load<SpriteFont>("text2");
+            font = Content.Load<SpriteFont>("textType");
         }
 
         protected override void Update(GameTime gameTime)

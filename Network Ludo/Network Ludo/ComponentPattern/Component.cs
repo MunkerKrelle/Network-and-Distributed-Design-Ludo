@@ -56,10 +56,10 @@ namespace ComponentPattern
             GameObject = gameObject;
         }
 
-        // Metode der kaldes når der sker en kollision med en anden Collider
-        public virtual void OnCollisionEnter(Collider col)
-        {
+        //// Metode der kaldes når der sker en kollision med en anden Collider
+        //public virtual void OnCollisionEnter(Collider col)
+        //{
 
-        }
+        //}
     }
 }

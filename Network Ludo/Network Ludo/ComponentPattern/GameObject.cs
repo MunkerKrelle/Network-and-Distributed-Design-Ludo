@@ -1,5 +1,4 @@
-﻿using _2SemesterEksamen;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -92,13 +91,7 @@ namespace ComponentPattern
                 components[i].Update(gameTime);
             }
         }
-        public void OnCollisionEnter(Collider collider)
-        {
-            for (int i = 0; i < components.Count; i++)
-            {
-                components[i].OnCollisionEnter(collider);
-            }
-        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < components.Count; i++)
