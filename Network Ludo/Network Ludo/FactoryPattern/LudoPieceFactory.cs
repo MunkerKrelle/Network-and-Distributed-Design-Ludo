@@ -1,6 +1,7 @@
 ﻿using ComponentPattern;
-using Network_Ludo.ComponentPattern;
-using System.Drawing;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 
 namespace FactoryPattern
 {
@@ -25,14 +26,16 @@ namespace FactoryPattern
 
         private GameObject prototype;
 
-        public GameObject Create(Color color)
+        public GameObject Create(Color color, string name)
         {
             GameObject go = new GameObject();
 
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            //sr.SetSprite();
-            go.Transform.Layer = 0.7f;
-            go.AddComponent<LudoPiece>(color);
+            sr.SetSprite("LudoPiece");
+            go.Transform.Position = new Vector2(200, 200);
+            go.Transform.Scale = new Vector2(0.1f, 0.1f);
+            go.Transform.Color = color;
+            go.AddComponent<LudoPiece>(color, name);
 
             return go;
         }
@@ -46,7 +49,7 @@ namespace FactoryPattern
             GameObject go = new GameObject();
 
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            sr.SetSprite("");
+            sr.SetSprite("LudoPiece");
             go.Transform.Layer = 0.7f;
             go.AddComponent<LudoPiece>();
             return go;
