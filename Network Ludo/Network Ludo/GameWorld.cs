@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Network_Ludo.BuilderPattern;
 using Network_Ludo.ComponentPattern;
 using System.Collections.Generic;
 
@@ -72,6 +73,12 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            Director director = new Director(new DieBuilder());
+            GameObject dieGo = director.Construct();
+            Die die = dieGo.GetComponent<Die>() as Die;
+
+            gameObjects.Add(dieGo);
+
             foreach (GameObject go in gameObjects)
             {
                 go.Awake();
