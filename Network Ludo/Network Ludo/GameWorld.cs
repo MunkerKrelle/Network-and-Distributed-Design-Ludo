@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Network_Ludo.ComponentPattern;
 using System.Collections.Generic;
 
 namespace Network_Ludo
@@ -71,13 +72,17 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            GameObject gridObject = new GameObject();
+            Grid grid = gridObject.AddComponent<Grid>(5, 20, 10); // 5x20 grid with 100x100 pixel cells
+            Instantiate(gridObject);
+
             foreach (GameObject go in gameObjects)
             {
                 go.Awake();
             }
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
-            _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
+            _graphics.PreferredBackBufferHeight = 10 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -91,6 +96,7 @@ namespace Network_Ludo
             {
                 go.Start();
             }
+
             font = Content.Load<SpriteFont>("textType");
         }
 
@@ -108,6 +114,10 @@ namespace Network_Ludo
             else
             {
                 isPressed = false;
+            }
+            foreach (GameObject go in gameObjects)
+            {
+                go.Update(gameTime);
             }
 
             base.Update(gameTime);
