@@ -118,6 +118,11 @@ namespace Network_Ludo
                 isPressed = false;
             }
 
+            foreach (GameObject go in gameObjects)
+            {
+                go.Update(gameTime);
+            }
+
             base.Update(gameTime);
 
             Cleanup();
