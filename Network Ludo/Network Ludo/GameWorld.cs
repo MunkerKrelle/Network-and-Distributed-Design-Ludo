@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Network_Ludo
 {
@@ -80,6 +83,8 @@ namespace Network_Ludo
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
+            Server.Instance.server.Start();
+
             base.Initialize();
         }
 
@@ -99,6 +104,8 @@ namespace Network_Ludo
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
 
+        
+
             mouseState = Mouse.GetState();
 
             if (mouseState.LeftButton == ButtonState.Pressed)
@@ -108,6 +115,13 @@ namespace Network_Ludo
             else
             {
                 isPressed = false;
+            }
+
+            while (true)
+            {
+                TcpClient client = Server.Instance.server.AcceptTcpClient();
+                Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
+                clientThread.Start();
             }
 
             base.Update(gameTime);
