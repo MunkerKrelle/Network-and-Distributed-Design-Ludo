@@ -13,6 +13,7 @@ namespace Network_Ludo.ComponentPattern
         private Random rnd;
         private int roll;
         private Animator animator;
+        private float fps;
 
         public Die(GameObject gameObject) : base(gameObject)
         {
@@ -20,11 +21,18 @@ namespace Network_Ludo.ComponentPattern
 
         public override void Awake()
         {
+            fps = 25;
+            animator = GameObject.GetComponent<Animator>() as Animator;
+            GameObject.Transform.Scale = new Vector2(.5f, .5f);
             base.Awake();
         }
 
         public override void Start()
         {
+            GameObject.Transform.Position = new Vector2(50, 50);
+            SpriteRenderer sr = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
+            sr.SetSprite("Side1");
+            GameObject.Transform.Layer =0.9f;
             base.Start();
         }
 
