@@ -215,7 +215,7 @@ namespace Network_Ludo
         public void JoinGame()
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
-                for (int i = 0; i > 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     Instantiate(LudoPieceFactory.Instance.Create(Color.Red, inputText));
                 }
