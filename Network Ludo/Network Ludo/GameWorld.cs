@@ -1,9 +1,10 @@
 ﻿using ComponentPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
-namespace Nework_Ludo
+namespace Network_Ludo
 {
     enum GameState
     {
@@ -24,9 +25,17 @@ namespace Nework_Ludo
         private List<GameObject> newGameObjects = new List<GameObject>();
 
         private List<GameObject> destroyedGameObjects = new List<GameObject>();
+        public float DeltaTime { get; private set; }
+        public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
+
+        private static List<Button> buttons = new List<Button>();
+        private GameObject specificButton;
+
+        public static MouseState mouseState;
+        public static MouseState newState;
+        public static bool isPressed;
 
         private float timeElapsed;
-        private GameState _state;
 
         public static SpriteFont font;
 
@@ -87,6 +96,20 @@ namespace Nework_Ludo
 
         protected override void Update(GameTime gameTime)
         {
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            timeElapsed += DeltaTime;
+
+            mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                isPressed = true;
+            }
+            else
+            {
+                isPressed = false;
+            }
+
             base.Update(gameTime);
 
             Cleanup();
