@@ -1,6 +1,6 @@
 ﻿using ComponentPattern;
 using Microsoft.Xna.Framework;
-using Nework_Ludo;
+using Network_Ludo;
 
 namespace Network_Ludo.ComponentPattern
 {

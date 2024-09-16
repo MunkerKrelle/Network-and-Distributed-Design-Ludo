@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace _2SemesterEksamen
+namespace Network_Ludo
 {
     /// <summary>
     /// Bliver brugt til at kunne ændre alle aspekter af GameObejctsne samlet, frem for at skulle gøre det hver for sig

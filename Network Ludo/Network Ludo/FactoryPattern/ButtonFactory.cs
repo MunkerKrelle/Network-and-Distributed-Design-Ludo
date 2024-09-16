@@ -51,7 +51,7 @@ namespace FactoryPattern
 
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.SetSprite("button");
-            go.AddComponent<Weapon>();
+            go.AddComponent<Button>();
             return go;
         }
     }
