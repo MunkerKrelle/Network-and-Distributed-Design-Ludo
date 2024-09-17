@@ -35,15 +35,37 @@ namespace Network_Ludo.ComponentPattern
             GameObject.Transform.Layer = 0.9f;
         }
 
-        public override void Update(GameTime gameTime)
-        {
-
-        }
-
         public void Roll()
         {
+            //PLAY ANIMATION HER
+            animator.PlayAnimation("Roll");
             roll = rnd.Next(1, 7);
             GameObject.Transform.Position += new Vector2((roll * 10), 0);
+
+            if (roll == 1)
+            {
+                animator.PlayAnimation("Idle1");
+            }
+            else if (roll == 2)
+            {
+                animator.PlayAnimation("Idle2");
+            }
+            else if (roll == 3)
+            {
+                animator.PlayAnimation("Idle3");
+            }
+            else if (roll == 4)
+            {
+                animator.PlayAnimation("Idle4");
+            }
+            else if (roll == 5)
+            {
+                animator.PlayAnimation("Idle5");
+            }
+            else if (roll == 6)
+            {
+                animator.PlayAnimation("Idle6");
+            }
         }
     }
 }

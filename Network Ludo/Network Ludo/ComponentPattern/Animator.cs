@@ -18,7 +18,7 @@ namespace ComponentPattern
 
         private Dictionary<string, Animation> animations = new(); //Dictionary over de forskellige animationer de forskellige GameObjects kan have
 
-        public Animation currentAnimation {  get; private set; } //Hvilken animation der kører lige nu
+        public Animation currentAnimation { get; private set; } //Hvilken animation der kører lige nu
 
         public Animator(GameObject gameObject) : base(gameObject)
         {
@@ -43,10 +43,6 @@ namespace ComponentPattern
             {
                 timeElapsed = 0;
                 CurrentIndex = 0;
-                if (GameObject.GetComponent<Player>() != null)
-                {
-                    PlayAnimation("Idle");
-                }
             }
             spriteRenderer.Sprite = currentAnimation.Sprites[CurrentIndex];
             base.Update(gameTime);

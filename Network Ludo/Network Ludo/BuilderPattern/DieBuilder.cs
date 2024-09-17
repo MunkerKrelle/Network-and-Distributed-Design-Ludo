@@ -26,7 +26,14 @@ namespace Network_Ludo.BuilderPattern
             gameObject.AddComponent<SpriteRenderer>();
 
             Animator animator = gameObject.AddComponent<Animator>();
+            animator.AddAnimation(BuildAnimation("Idle1", new string[]{ "Side1"}));
+            animator.AddAnimation(BuildAnimation("Idle2", new string[] { "Side2" }));
+            animator.AddAnimation(BuildAnimation("Idle3", new string[] { "Side3" }));
+            animator.AddAnimation(BuildAnimation("Idle4", new string[] { "Side4" }));
+            animator.AddAnimation(BuildAnimation("Idle5", new string[] { "Side5" }));
+            animator.AddAnimation(BuildAnimation("Idle6", new string[] { "Side6" }));
             animator.AddAnimation(BuildAnimation("Roll", new string[] { "Side1", "Side2", "Side3", "Side4", "Side5", "Side6" }));
+
         }
 
         /// <summary>
