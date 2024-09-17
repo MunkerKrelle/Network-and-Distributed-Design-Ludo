@@ -78,7 +78,7 @@ namespace Network_Ludo
             {
                 go.Awake();
             }
-
+            
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
@@ -103,9 +103,6 @@ namespace Network_Ludo
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
-
-        
-
             mouseState = Mouse.GetState();
 
             if (mouseState.LeftButton == ButtonState.Pressed)

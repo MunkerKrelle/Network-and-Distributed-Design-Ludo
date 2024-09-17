@@ -42,8 +42,8 @@ namespace myTcpClient
             //client.Connect("localhost", 12000);
             //myClientsList.Add(client);
             client.GetMeGoing();
-            client.Repeat();
-
+            client.RunOnce();
+           
             base.Initialize();
         }
 
@@ -64,22 +64,8 @@ namespace myTcpClient
             {
                 Console.WriteLine("key was pressed");
             }
-            
+
             client.MyMessages();
-            //Client.Test2();
-
-            //if (myClientsList[0].) 
-            //{
-
-            //}
-
-            //if (myClientsList.Count == 1)
-            //{
-            //    myClientsList[0].Connect("localhost", 12000);
-
-            //}
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
