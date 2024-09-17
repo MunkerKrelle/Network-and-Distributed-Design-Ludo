@@ -3,7 +3,7 @@ using FactoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.MediaFoundation;
+using Network_Ludo.ComponentPattern;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -33,7 +33,7 @@ namespace Network_Ludo
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static List<Button> buttons = new List<Button>();
-        private GameObject specificButton;
+        
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -78,13 +78,18 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            GameObject gridObject = new GameObject();
+            Grid grid = gridObject.AddComponent<Grid>(5, 20, 100);
+            
+            Instantiate(gridObject);
+
             foreach (GameObject go in gameObjects)
             {
                 go.Awake();
             }
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
-            _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
+            _graphics.PreferredBackBufferHeight = 10 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -98,6 +103,7 @@ namespace Network_Ludo
             {
                 go.Start();
             }
+
             font = Content.Load<SpriteFont>("textType");
 
             //JoinGame();
@@ -121,6 +127,10 @@ namespace Network_Ludo
             else
             {
                 isPressed = false;
+            }
+            foreach (GameObject go in gameObjects)
+            {
+                go.Update(gameTime);
             }
 
             foreach (GameObject go in gameObjects)

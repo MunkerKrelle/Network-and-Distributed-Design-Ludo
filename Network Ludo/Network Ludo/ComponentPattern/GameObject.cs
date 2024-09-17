@@ -85,6 +85,8 @@ namespace ComponentPattern
             }
         }
 
+
+
         public void Update(GameTime gameTime)
         {
             for (int i = 0; i < components.Count; i++)
