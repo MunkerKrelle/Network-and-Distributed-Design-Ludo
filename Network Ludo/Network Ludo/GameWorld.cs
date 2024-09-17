@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Network_Ludo.ComponentPattern;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -32,7 +33,7 @@ namespace Network_Ludo
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static List<Button> buttons = new List<Button>();
-        private GameObject specificButton;
+        
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -78,7 +79,8 @@ namespace Network_Ludo
         protected override void Initialize()
         {
             GameObject gridObject = new GameObject();
-            Grid grid = gridObject.AddComponent<Grid>(5, 20, 10); // 5x20 grid with 100x100 pixel cells
+            Grid grid = gridObject.AddComponent<Grid>(5, 20, 100);
+            
             Instantiate(gridObject);
 
             foreach (GameObject go in gameObjects)

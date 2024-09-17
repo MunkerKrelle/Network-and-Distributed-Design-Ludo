@@ -30,10 +30,7 @@ namespace ComponentPattern
 
         }
 
-        public virtual void LoadContent()
-        {
 
-        }
         // Metode der kaldes for at opdatere komponenten
         public virtual void Update(GameTime gameTime)
         {
