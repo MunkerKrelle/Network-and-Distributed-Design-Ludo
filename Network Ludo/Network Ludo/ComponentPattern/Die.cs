@@ -37,13 +37,13 @@ namespace Network_Ludo.ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
-            GameObject.Transform.Position = new Vector2(100 + (roll * 10), 100);
+
         }
 
-        public float Roll()
+        public void Roll()
         {
             roll = rnd.Next(1, 7);
-            return roll;
+            GameObject.Transform.Position += new Vector2((roll * 10), 0);
         }
     }
 }
