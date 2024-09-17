@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Network_Ludo.BuilderPattern;
+using Network_Ludo.CommandPattern;
 using Network_Ludo.ComponentPattern;
 using System.Collections.Generic;
 
@@ -78,6 +79,8 @@ namespace Network_Ludo
             Die die = dieGo.GetComponent<Die>() as Die;
 
             gameObjects.Add(dieGo);
+
+            InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
 
             foreach (GameObject go in gameObjects)
             {

@@ -11,9 +11,8 @@ namespace Network_Ludo.ComponentPattern
     internal class Die : Component
     {
         private Random rnd;
-        private int roll;
+        private float roll;
         private Animator animator;
-        private float fps;
 
         public Die(GameObject gameObject) : base(gameObject)
         {
@@ -38,12 +37,13 @@ namespace Network_Ludo.ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
+            GameObject.Transform.Position = new Vector2(100 + (roll * 10), 100);
         }
 
-        public void Roll()
+        public float Roll()
         {
             roll = rnd.Next(1, 7);
-            //BRIK RYK ALT EFTER VÆRDI AF ROLL
+            return roll;
         }
     }
 }
