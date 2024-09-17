@@ -24,6 +24,8 @@ namespace Network_Ludo.ComponentPattern
             animator = GameObject.GetComponent<Animator>() as Animator;
             GameObject.Transform.Scale = new Vector2(.5f, .5f);
             GameObject.IsActive = true;
+            rnd = new Random();
+
         }
 
         public override void Start()
@@ -36,7 +38,6 @@ namespace Network_Ludo.ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
-
         }
 
         public void Roll()
