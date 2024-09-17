@@ -34,17 +34,17 @@ namespace Network_Ludo
 
         void SendToClients(string message, params ClientInfo[] clients)
     {
-        ////byte[] data = MessagePackSerializer.Serialize(message);
-        ////foreach (ClientInfo client in clients)
-        ////{
-        ////    Send the length of the message as 4 - byte integer
-        ////    client.writer.Write(data.Length);
-        ////    client.writer.Write(data);
-        ////    client.writer.Flush();
-        ////}
-    }
+            byte[] data = MessagePackSerializer.Serialize(message);
+            foreach (ClientInfo client in clients)
+            {
+                //Send the length of the message as 4 - byte integer
+                client.writer.Write(data.Length);
+                client.writer.Write(data);
+                client.writer.Flush();
+            }
+        }
 
-    public void HandleClient(TcpClient client)
+        public void HandleClient(TcpClient client)
     {
         Guid clientId = Guid.NewGuid();
 
