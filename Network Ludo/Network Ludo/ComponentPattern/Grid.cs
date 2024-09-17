@@ -110,48 +110,20 @@ namespace Network_Ludo.ComponentPattern
                         cellLayerDepth
                     );
 
-                    int lineWidth = 2;  // Brug tykkere linjer
+                    int lineWidth = 2;  
 
-                    // Tegn venstre kant (foran cellen)
-                    spriteBatch.Draw(
-                        sr.Sprite,
-                        new Rectangle(grid[row, col].Left, grid[row, col].Top, lineWidth, cellSize),
-                        null,
-                        Color.Black,
-                        0f,
-                        Vector2.Zero,
-                        SpriteEffects.None,
-                        lineLayerDepth
+                    
+                    spriteBatch.Draw(sr.Sprite,new Rectangle(grid[row, col].Left, grid[row, col].Top, lineWidth, cellSize), null, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, lineLayerDepth);
+
+                    
+                    spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Left, grid[row, col].Top, cellSize, lineWidth), null, Color.Black, 0f,Vector2.Zero, SpriteEffects.None, lineLayerDepth);
+
+                    
+                    spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Right - lineWidth, grid[row, col].Top, lineWidth, cellSize), null, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, lineLayerDepth
                     );
 
-                    // Tegn øverste kant (foran cellen)
-                    spriteBatch.Draw(
-                        sr.Sprite,
-                        new Rectangle(grid[row, col].Left, grid[row, col].Top, cellSize, lineWidth), null, Color.Black, 0f,Vector2.Zero, SpriteEffects.None, lineLayerDepth);
-
-                    // Tegn højre kant (foran cellen)
-                    spriteBatch.Draw(
-                        sr.Sprite,
-                        new Rectangle(grid[row, col].Right - lineWidth, grid[row, col].Top, lineWidth, cellSize),
-                        null,
-                        Color.Black,
-                        0f,
-                        Vector2.Zero,
-                        SpriteEffects.None,
-                        lineLayerDepth
-                    );
-
-                    // Tegn nederste kant (foran cellen)
-                    spriteBatch.Draw(
-                        sr.Sprite,
-                        new Rectangle(grid[row, col].Left, grid[row, col].Bottom - lineWidth, cellSize, lineWidth),
-                        null,
-                        Color.Black,
-                        0f,
-                        Vector2.Zero,
-                        SpriteEffects.None,
-                        lineLayerDepth
-                    );
+                    
+                    spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Left, grid[row, col].Bottom - lineWidth, cellSize, lineWidth), null, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, lineLayerDepth);
                 }
             }
         }
