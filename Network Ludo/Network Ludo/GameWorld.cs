@@ -121,6 +121,12 @@ namespace Network_Ludo
                 isPressed = false;
             }
 
+            if (timeElapsed >= .3f)
+            {
+                InputHandler.Instance.Execute();
+                timeElapsed = 0;
+            }
+
             foreach (GameObject go in gameObjects)
             {
                 go.Update(gameTime);
