@@ -34,12 +34,15 @@ namespace Network_Ludo
         private static List<Button> buttons = new List<Button>();
         private GameObject specificButton;
 
+        public List<Player> playerList = new List<Player>();
+
         public static MouseState mouseState;
         public static MouseState newState;
         public static bool isPressed;
-        KeyboardState keyState;
-        KeyboardState previousKeyState;
-        string inputText = string.Empty;
+        public KeyboardState keyState;
+        public KeyboardState previousKeyState;
+        public static string inputText = string.Empty;
+        Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
 
         private float timeElapsed;
 
@@ -77,14 +80,23 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
-            foreach (GameObject go in gameObjects)
-            {
-                go.Awake();
-            }
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
+
+
+            Color[] colors = new Color[] { Color.AntiqueWhite, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
+            for (int i = 0; i < 4; i++)
+            {
+                gameObjects.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 + 100), "", null, colors[i]));
+                gameObjects.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 - 100), "", null, colors[colors.Length - 1 - i]));
+            }
+
+            foreach (GameObject go in gameObjects)
+            {
+                go.Awake();
+            }
 
             base.Initialize();
         }
@@ -111,7 +123,7 @@ namespace Network_Ludo
             timeElapsed += DeltaTime;
 
             mouseState = Mouse.GetState();
-            WriteText(); 
+            WriteText();
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
@@ -167,11 +179,16 @@ namespace Network_Ludo
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
-            _spriteBatch.DrawString(font, inputText, new Vector2(100, 100), Color.Black);
+            _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
 
             foreach (GameObject go in gameObjects)
             {
                 go.Draw(_spriteBatch);
+            }
+
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                _spriteBatch.DrawString(font, playerList[i].playerName, corners[i], playerList[i].color, 0, Origin(playerList[i].playerName), 1, SpriteEffects.None, 1f);
             }
 
             _spriteBatch.End();
@@ -201,7 +218,8 @@ namespace Network_Ludo
                     else if (key >= Keys.D0 && key <= Keys.D9)
                     {
                         inputText += (key - Keys.D0).ToString();
-                    } else if (key == Keys.Enter)
+                    }
+                    else if (key == Keys.Enter)
                     {
                         JoinGame();
                     }
@@ -211,13 +229,21 @@ namespace Network_Ludo
             previousKeyState = keyState;
         }
 
+        private Vector2 Origin(string input)
+        {
+            Vector2 fontLength = GameWorld.font.MeasureString(input);
+
+            Vector2 originText = new Vector2(fontLength.X / 2f, fontLength.Y / 2f);
+            return originText;
+        }
+
         public void JoinGame()
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
-                for (int i = 0; i < 4; i++)
-                {
-                    Instantiate(LudoPieceFactory.Instance.Create(Color.Red, inputText));
-                }
+            GameObject player = new GameObject();
+            player.AddComponent<Player>(inputText, Color.Red, corners[playerList.Count]);
+            newGameObjects.Add(player);
+            playerList.Add(player.GetComponent<Player>() as Player);
+
             inputText = string.Empty;
         }
 

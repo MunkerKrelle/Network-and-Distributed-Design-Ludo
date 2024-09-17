@@ -41,6 +41,18 @@ namespace FactoryPattern
             return go;
         }
 
+        public GameObject CreateWithColor(Vector2 buttonPosition, string buttonText, Action actionFunction, Color buttonColor)
+        {
+            GameObject go = new GameObject();
+
+            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
+            sr.SetSprite("cellGrid");
+            go.Transform.Color = buttonColor;
+            go.AddComponent<Button>(buttonPosition, buttonText, actionFunction);
+
+            return go;
+        }
+
         /// <summary>
         /// Default create til interface
         /// </summary>
