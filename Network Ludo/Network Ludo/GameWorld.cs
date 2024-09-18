@@ -1,4 +1,5 @@
 ﻿using ComponentPattern;
+using FactoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -6,6 +7,7 @@ using Network_Ludo.BuilderPattern;
 using Network_Ludo.CommandPattern;
 using Network_Ludo.ComponentPattern;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Network_Ludo
 {
@@ -32,11 +34,14 @@ namespace Network_Ludo
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static List<Button> buttons = new List<Button>();
-        private GameObject specificButton;
+        
 
         public static MouseState mouseState;
         public static MouseState newState;
         public static bool isPressed;
+        KeyboardState keyState;
+        KeyboardState previousKeyState;
+        string inputText = string.Empty;
 
         private float timeElapsed;
 
@@ -82,13 +87,18 @@ namespace Network_Ludo
 
             InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
 
+            GameObject gridObject = new GameObject();
+            Grid grid = gridObject.AddComponent<Grid>(5, 20, 100);
+            
+            Instantiate(gridObject);
+
             foreach (GameObject go in gameObjects)
             {
                 go.Awake();
             }
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
-            _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
+            _graphics.PreferredBackBufferHeight = 10 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -102,15 +112,22 @@ namespace Network_Ludo
             {
                 go.Start();
             }
+
             font = Content.Load<SpriteFont>("textType");
+
+            //JoinGame();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
 
             mouseState = Mouse.GetState();
+            WriteText(); 
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
@@ -119,6 +136,15 @@ namespace Network_Ludo
             else
             {
                 isPressed = false;
+            }
+            foreach (GameObject go in gameObjects)
+            {
+                go.Update(gameTime);
+            }
+
+            foreach (GameObject go in gameObjects)
+            {
+                go.Update(gameTime);
             }
 
             if (timeElapsed >= .3f)
@@ -172,6 +198,8 @@ namespace Network_Ludo
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
+            _spriteBatch.DrawString(font, inputText, new Vector2(100, 100), Color.Black);
+
             foreach (GameObject go in gameObjects)
             {
                 go.Draw(_spriteBatch);
@@ -181,5 +209,48 @@ namespace Network_Ludo
 
             base.Draw(gameTime);
         }
+
+        public void WriteText()
+        {
+            keyState = Keyboard.GetState();
+
+            if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
+            {
+                if (inputText.Length > 0)
+                    inputText = inputText[..^1]; // Remove last character
+            }
+
+            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            {
+                if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
+                {
+                    // Check if the key is a character key
+                    if (key >= Keys.A && key <= Keys.Z)
+                    {
+                        inputText += key.ToString();
+                    }
+                    else if (key >= Keys.D0 && key <= Keys.D9)
+                    {
+                        inputText += (key - Keys.D0).ToString();
+                    } else if (key == Keys.Enter)
+                    {
+                        JoinGame();
+                    }
+
+                }
+            }
+            previousKeyState = keyState;
+        }
+
+        public void JoinGame()
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
+                for (int i = 0; i < 4; i++)
+                {
+                    Instantiate(LudoPieceFactory.Instance.Create(Color.Red, inputText));
+                }
+            inputText = string.Empty;
+        }
+
     }
 }

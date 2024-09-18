@@ -1,11 +1,14 @@
 ﻿using Network_Ludo;
 using System;
 
-public static class Program
+namespace Network_Ludo
 {
-    [STAThread]
-    static void Main()
+    public static class Program
     {
-        GameWorld.Instance.Run();
+        [STAThread]
+        static void Main()
+        {
+            GameWorld.Instance.Run();
+        }
     }
 }
