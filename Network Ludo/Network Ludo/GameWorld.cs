@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Network_Ludo
 {
@@ -44,6 +43,10 @@ namespace Network_Ludo
         public static string inputText = string.Empty;
         Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
 
+
+        Color[] colors = new Color[] { Color.AntiqueWhite, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
+        List<GameObject> colorButtons = new List<GameObject>();
+
         private float timeElapsed;
 
         public static SpriteFont font;
@@ -80,18 +83,11 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
-
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
-
-            Color[] colors = new Color[] { Color.AntiqueWhite, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
-            for (int i = 0; i < 4; i++)
-            {
-                gameObjects.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 + 100), "", null, colors[i]));
-                gameObjects.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 - 100), "", null, colors[colors.Length - 1 - i]));
-            }
+            CreateColorBox();
 
             foreach (GameObject go in gameObjects)
             {
@@ -111,7 +107,7 @@ namespace Network_Ludo
             }
             font = Content.Load<SpriteFont>("textType");
 
-            //JoinGame();
+            //CreateColorBox();
         }
 
         protected override void Update(GameTime gameTime)
@@ -221,7 +217,7 @@ namespace Network_Ludo
                     }
                     else if (key == Keys.Enter)
                     {
-                        JoinGame();
+                        ShowColorBoxes();
                     }
 
                 }
@@ -237,15 +233,48 @@ namespace Network_Ludo
             return originText;
         }
 
-        public void JoinGame()
+        public void CreateColorBox()
         {
+            for (int i = 0; i < 4; i++)
+            {
+                colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 200 + i * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[i]), colors[i]));
+                colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 - 100), "", () => JoinLudo(colors[colors.Length - 1 - i]), colors[colors.Length - 1 - i]));
+            }
+
+            foreach (var button in colorButtons)
+            {
+                gameObjects.Add(button);
+            }
+        }
+
+        public void ShowColorBoxes()
+        {
+            inputText = string.Empty;
+
+            foreach (var button in colorButtons)
+            {
+                button.IsActive = true;
+            }
+        }
+
+        private void JoinLudo(Color chosenColor)
+        {
+
+            foreach (var button in colorButtons)
+            {
+                if (button.Transform.Color == chosenColor)
+                {
+
+                    Destroy(button);
+                }
+            }
+
             GameObject player = new GameObject();
-            player.AddComponent<Player>(inputText, Color.Red, corners[playerList.Count]);
+
+            player.AddComponent<Player>(inputText, chosenColor, corners[playerList.Count]);
             newGameObjects.Add(player);
             playerList.Add(player.GetComponent<Player>() as Player);
 
-            inputText = string.Empty;
         }
-
     }
 }

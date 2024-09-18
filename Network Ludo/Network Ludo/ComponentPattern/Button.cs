@@ -52,7 +52,7 @@ namespace ComponentPattern
         }
         public override void Awake()
         {
-            GameObject.IsActive = true;
+            GameObject.IsActive = false;
         }
         public override void Start()
         {
@@ -66,7 +66,7 @@ namespace ComponentPattern
         /// </summary>
         public void MouseOnButton()
         {
-            if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y)
+            if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y && GameObject.IsActive == true)
             {
                 GameObject.Transform.Color = Color.LightGray;
             }
@@ -81,16 +81,18 @@ namespace ComponentPattern
         /// </summary>
         public void MousePressed()
         {
-            if (GameWorld.isPressed == true)
+            if (GameWorld.isPressed == true && GameObject.IsActive == true)
             {
                 if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y)
                 {
+                    GameWorld.isPressed = false;
                     GameObject.Transform.Color = Color.Yellow;
                     buttonAction.Invoke();
                 }
             }
-
         }
+
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -104,6 +106,6 @@ namespace ComponentPattern
             spriteBatch.DrawString(GameWorld.font, $"{maxPosition}", new Vector2(buttonPosition.X * 2, buttonPosition.Y + 120), Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
 
         }
-        
+
     }
 }
