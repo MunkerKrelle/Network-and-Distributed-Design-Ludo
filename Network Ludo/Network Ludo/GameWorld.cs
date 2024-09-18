@@ -35,6 +35,7 @@ namespace Network_Ludo
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         public static GameState TurnOrder;
+        private int turn;
 
         private static List<Button> buttons = new List<Button>();
 
@@ -90,7 +91,7 @@ namespace Network_Ludo
             Director director = new Director(new DieBuilder());
             GameObject dieGo = director.Construct();
             Die die = dieGo.GetComponent<Die>() as Die;
-
+            turn = 1;
             gameObjects.Add(dieGo);
 
             InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
@@ -277,5 +278,25 @@ namespace Network_Ludo
             inputText = string.Empty;
         }
 
+        public void CheckState(int roll)
+        {
+            switch (TurnOrder)
+            {
+                case GameState.Player1:
+                    TurnOrder = GameState.Player2;
+                    break;
+                case GameState.Player2:
+                    TurnOrder = GameState.Player3;
+                    break;
+                case GameState.Player3:
+                    TurnOrder = GameState.Player4;
+                    break;
+                case GameState.Player4:
+                    TurnOrder = GameState.Player1;
+                    break;
+                default:
+                    break;       
+            }
+        }
     }
 }
