@@ -1,4 +1,4 @@
-﻿using Network_Ludo.ComponentPattern;
+﻿using ComponentPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +7,17 @@ using System.Threading.Tasks;
 
 namespace Network_Ludo.CommandPattern
 {
-    internal class RollCommand : ICommand
+    internal class MoveCommand : ICommand
     {
-        private Die die;
-
-        public RollCommand(Die die)
-        {
-            this.die = die;
-        }
+        private LudoPiece piece;
         public void Execute()
         {
-            GameWorld.Instance.CheckState(die.RollDie());
+            piece.Move();
         }
 
         public void Undo()
         {
+            throw new NotImplementedException();
         }
     }
 }

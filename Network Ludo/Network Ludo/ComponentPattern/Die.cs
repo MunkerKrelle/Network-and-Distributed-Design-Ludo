@@ -11,7 +11,7 @@ namespace Network_Ludo.ComponentPattern
     internal class Die : Component
     {
         private Random rnd;
-        private float roll;
+        public int Roll { get; set; }
         private Animator animator;
 
         public Die(GameObject gameObject) : base(gameObject)
@@ -33,38 +33,52 @@ namespace Network_Ludo.ComponentPattern
             sr.SetSprite("Side1");
             GameObject.Transform.Layer = 0.9f;
         }
-        public void Roll()
+        public int RollDie()
         {
 
-            animator.PlayAnimation("Roll");
-            roll = rnd.Next(1, 7);
-            GameObject.Transform.Position += new Vector2((roll * 10), 0);
+            animator.PlayAnimation("RollDie");
+            Roll = rnd.Next(1, 7);
 
-                if (roll == 1)
-                {
-                    animator.PlayAnimation("Idle1");
-                }
-                else if (roll == 2)
-                {
-                    animator.PlayAnimation("Idle2");
-                }
-                else if (roll == 3)
-                {
-                    animator.PlayAnimation("Idle3");
-                }
-                else if (roll == 4)
-                {
-                    animator.PlayAnimation("Idle4");
-                }
-                else if (roll == 5)
-                {
-                    animator.PlayAnimation("Idle5");
-                }
-                else if (roll == 6)
-                {
-                    animator.PlayAnimation("Idle6");
-                }
+            if (Roll == 1)
+            {
+                animator.PlayAnimation("Idle1");
+                return Roll;
             }
+            else if (Roll == 2)
+            {
+                animator.PlayAnimation("Idle2");
+                return Roll;
 
+            }
+            else if (Roll == 3)
+            {
+                animator.PlayAnimation("Idle3");
+                return Roll;
+
+            }
+            else if (Roll == 4)
+            {
+                animator.PlayAnimation("Idle4");
+                return Roll;
+
+            }
+            else if (Roll == 5)
+            {
+                animator.PlayAnimation("Idle5");
+                return Roll;
+
+            }
+            else if (Roll == 6)
+            {
+                animator.PlayAnimation("Idle6");
+                return Roll;
+
+            }
+            else
+            {
+                return Roll;
+            }
         }
+
     }
+}

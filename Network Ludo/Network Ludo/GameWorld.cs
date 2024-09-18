@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace Network_Ludo
 {
-    enum GameState
+    public enum GameState
     {
         Player1,
         Player2,
@@ -33,6 +33,8 @@ namespace Network_Ludo
         private List<GameObject> destroyedGameObjects = new List<GameObject>();
         public float DeltaTime { get; private set; }
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
+
+        public static GameState TurnOrder;
 
         private static List<Button> buttons = new List<Button>();
 
@@ -95,7 +97,7 @@ namespace Network_Ludo
 
             GameObject gridObject = new GameObject();
             Grid grid = gridObject.AddComponent<Grid>(4, 20, 100);
-            
+
             Instantiate(gridObject);
 
             piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
@@ -149,7 +151,7 @@ namespace Network_Ludo
             timeElapsed += DeltaTime;
 
             mouseState = Mouse.GetState();
-            WriteText(); 
+            WriteText();
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
@@ -254,7 +256,8 @@ namespace Network_Ludo
                     else if (key >= Keys.D0 && key <= Keys.D9)
                     {
                         inputText += (key - Keys.D0).ToString();
-                    } else if (key == Keys.Enter)
+                    }
+                    else if (key == Keys.Enter)
                     {
                         JoinGame();
                     }
