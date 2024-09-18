@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
+using System.Text;
 
 namespace myTcpClient
 {
@@ -27,7 +28,8 @@ namespace myTcpClient
         }
         private Client client = new Client();
         public List<TcpClient> myClientsList = new List<TcpClient>();
-        
+        private string _stringValue = string.Empty;
+
 
         public ClientGameWorld()
         {
@@ -63,12 +65,34 @@ namespace myTcpClient
             }
             if (keyState.IsKeyDown(Keys.Enter))
             {
-                Console.WriteLine("key was pressed");
-                client.isChatting = true;
-                client.MyMessages("i am so awesome");
+                client.isChatting = !client.isChatting;
             }
+            EnterMessage(keyState);
 
+            //client.MyMessages("i am so awesome");
             base.Update(gameTime);
+        }
+
+        public void EnterMessage(KeyboardState keyState) 
+        {
+            if (client.isChatting == true) 
+            {
+                var keys = keyState.GetPressedKeys();
+
+                if (keys.Length > 0)
+                {
+                    var keyValue = keys[0].ToString();
+                    if (keyValue != "Enter")
+                    {
+                        client.letters += keyValue; //needs a cooldown
+                    }
+                }
+                //if (keyState.IsKeyDown(Keys.Home))
+                //{
+                //    client.isChatting = false;
+                //}
+            }
+            
         }
 
         protected override void Draw(GameTime gameTime)

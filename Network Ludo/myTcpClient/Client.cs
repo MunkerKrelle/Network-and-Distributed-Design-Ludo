@@ -19,6 +19,7 @@ namespace myTcpClient
         //Console.WriteLine("Connected to server...");
         public bool isChatting = false;
         private object locker = new object();
+        public string letters;
         public void GetMeGoing()
         {
             ClientGameWorld.Instance.myClientsList.Add(client);
@@ -78,8 +79,6 @@ namespace myTcpClient
                 int messageLength = reader.ReadInt32();
                 byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
                 string message = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
-
-
 
             }
             if (client.Connected == false) 
