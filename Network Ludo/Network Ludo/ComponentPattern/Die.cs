@@ -28,7 +28,7 @@ namespace Network_Ludo.ComponentPattern
 
         public override void Start()
         {
-            GameObject.Transform.Position = new Vector2(100, 100);
+            GameObject.Transform.Position = new Vector2(100, 800);
             SpriteRenderer sr = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
             sr.SetSprite("Side1");
             GameObject.Transform.Layer = 0.9f;

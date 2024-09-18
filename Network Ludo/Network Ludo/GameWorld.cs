@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Network_Ludo.BuilderPattern;
 using Network_Ludo.CommandPattern;
 using Network_Ludo.ComponentPattern;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -34,7 +35,12 @@ namespace Network_Ludo
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static List<Button> buttons = new List<Button>();
-        
+
+        GameObject piece1;
+        GameObject piece2;
+        GameObject piece3;
+        GameObject piece4;
+
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -88,9 +94,25 @@ namespace Network_Ludo
             InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
 
             GameObject gridObject = new GameObject();
-            Grid grid = gridObject.AddComponent<Grid>(5, 20, 100);
+            Grid grid = gridObject.AddComponent<Grid>(4, 20, 100);
             
             Instantiate(gridObject);
+
+            piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
+            piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
+            piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
+            piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
+
+            gameObjects.Add(piece1);
+            gameObjects.Add(piece2);
+            gameObjects.Add(piece3);
+            gameObjects.Add(piece4);
+
+            piece1.Transform.Position = new Vector2(200, 600);
+            piece2.Transform.Position = new Vector2(400, 600);
+            piece3.Transform.Position = new Vector2(600, 600);
+            piece4.Transform.Position = new Vector2(800, 600);
+
 
             foreach (GameObject go in gameObjects)
             {
