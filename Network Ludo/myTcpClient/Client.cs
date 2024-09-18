@@ -17,7 +17,8 @@ namespace myTcpClient
         //client.Connect("localhost", 12000);
         public BinaryWriter writer;
         //Console.WriteLine("Connected to server...");
-
+        public bool isChatting = false;
+        private object locker = new object();
         public void GetMeGoing()
         {
             ClientGameWorld.Instance.myClientsList.Add(client);
@@ -53,9 +54,10 @@ namespace myTcpClient
             receiveThread.Start();
         }
 
-        public void MyMessages() 
+        public void MyMessages(string message) 
         {
-            string message = Console.ReadLine();
+            //string message = Console.ReadLine(); //old code
+            //string message = "i am so awesome";
             if (message == "list")
             {
                 SendMessage(writer, new ListMessage());
@@ -63,12 +65,13 @@ namespace myTcpClient
             else
             {
                 SendMessage(writer, new ChatMessage { message = message });
+                Console.WriteLine();
             }
         }
 
         void ReceiveMessages(TcpClient client)
         {
-            Thread.Sleep(10);
+            Thread.Sleep(100);
             BinaryReader reader = new BinaryReader(client.GetStream());
             while (client.Connected)
             {
@@ -76,10 +79,8 @@ namespace myTcpClient
                 byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
                 string message = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
 
-                if (message != null)
-                {
-                    Console.WriteLine(message);
-                }
+
+
             }
             if (client.Connected == false) 
             {

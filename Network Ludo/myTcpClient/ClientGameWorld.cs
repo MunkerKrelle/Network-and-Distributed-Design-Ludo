@@ -38,9 +38,6 @@ namespace myTcpClient
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            //client.Connect("localhost", 12000);
-            //myClientsList.Add(client);
             client.GetMeGoing();
             client.RunOnce();
            
@@ -64,8 +61,12 @@ namespace myTcpClient
             {
                 Console.WriteLine("key was pressed");
             }
-
-            client.MyMessages();
+            if (keyState.IsKeyDown(Keys.Enter))
+            {
+                Console.WriteLine("key was pressed");
+                client.isChatting = true;
+                client.MyMessages("i am so awesome");
+            }
 
             base.Update(gameTime);
         }

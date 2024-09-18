@@ -114,12 +114,13 @@ namespace Network_Ludo
                 isPressed = false;
             }
 
-            while (true)
-            {
+            //while (true)
+            //{
                 TcpClient client = Server.Instance.server.AcceptTcpClient();
                 Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
+                clientThread.IsBackground = true;
                 clientThread.Start();
-            }
+            //}
 
             base.Update(gameTime);
 
