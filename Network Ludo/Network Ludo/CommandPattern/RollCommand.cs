@@ -17,7 +17,7 @@ namespace Network_Ludo.CommandPattern
         }
         public void Execute()
         {
-            die.Roll();
+            die.checkForRoll = true;
         }
 
         public void Undo()
