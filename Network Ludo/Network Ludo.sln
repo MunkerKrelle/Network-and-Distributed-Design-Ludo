@@ -5,10 +5,12 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Network Ludo", "Network Ludo\Network Ludo.csproj", "{A7B39E7C-E300-4F6E-B8B4-A21CB9E4B385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "myTcpClient", "myTcpClient\myTcpClient.csproj", "{025A1317-9809-4ECB-AEB4-704A404E5E6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "myTcpClient", "myTcpClient\myTcpClient.csproj", "{025A1317-9809-4ECB-AEB4-704A404E5E6A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A7B39E7C-E300-4F6E-B8B4-A21CB9E4B385} = {A7B39E7C-E300-4F6E-B8B4-A21CB9E4B385}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LudoServer", "LudoServer\LudoServer.csproj", "{4C14676A-CDE2-46BC-AB02-869D8FE730B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{025A1317-9809-4ECB-AEB4-704A404E5E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{025A1317-9809-4ECB-AEB4-704A404E5E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{025A1317-9809-4ECB-AEB4-704A404E5E6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C14676A-CDE2-46BC-AB02-869D8FE730B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C14676A-CDE2-46BC-AB02-869D8FE730B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C14676A-CDE2-46BC-AB02-869D8FE730B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C14676A-CDE2-46BC-AB02-869D8FE730B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
