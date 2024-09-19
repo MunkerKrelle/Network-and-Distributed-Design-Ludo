@@ -1,27 +1,15 @@
-﻿using Microsoft.Xna.FrameWork;
-namespace LudoServer
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace ServerForLudo
 {
-    public class GameWorld : Game
+    public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
-        private static GameWorld instance;
-
-        public static GameWorld Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new GameWorld();
-                }
-                return instance;
-            }
-        }
-
-        public GameWorld()
+        public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
