@@ -206,9 +206,9 @@ namespace Network_Ludo
 
         private void ThreadForWaitingForClient() 
         { 
-            Thread test = new Thread(WhileLoopThread);
-            test.IsBackground = true;
-            test.Start();
+            Thread WaitForClient = new Thread(WhileLoopThread);
+            WaitForClient.IsBackground = true;
+            WaitForClient.Start();
         }
 
         private void Cleanup()
