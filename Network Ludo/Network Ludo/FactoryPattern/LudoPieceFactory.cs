@@ -32,9 +32,10 @@ namespace FactoryPattern
 
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.SetSprite("LudoPiece");
-            go.Transform.Position = new Vector2(200, 200);
+            go.Transform.Position = new Vector2(200, 600);
             go.Transform.Scale = new Vector2(0.1f, 0.1f);
             go.Transform.Color = color;
+            go.Transform.Layer = 1f;
             go.AddComponent<LudoPiece>(color, name);
 
             return go;

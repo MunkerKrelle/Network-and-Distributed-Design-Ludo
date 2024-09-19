@@ -3,6 +3,8 @@ using FactoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Network_Ludo.BuilderPattern;
+using Network_Ludo.CommandPattern;
 using Network_Ludo.ComponentPattern;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ using System.Threading;
 
 namespace Network_Ludo
 {
-    enum GameState
+    public enum GameState
     {
         Player1,
         Player2,
@@ -32,8 +34,16 @@ namespace Network_Ludo
         public float DeltaTime { get; private set; }
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
+        public static GameState TurnOrder;
+        private int turn;
+
         private static List<Button> buttons = new List<Button>();
-        
+
+        GameObject piece1;
+        GameObject piece2;
+        GameObject piece3;
+        GameObject piece4;
+
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -78,10 +88,34 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            Director director = new Director(new DieBuilder());
+            GameObject dieGo = director.Construct();
+            Die die = dieGo.GetComponent<Die>() as Die;
+            turn = 1;
+            gameObjects.Add(dieGo);
+
+            InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
+
             GameObject gridObject = new GameObject();
-            Grid grid = gridObject.AddComponent<Grid>(5, 20, 100);
-            
+            Grid grid = gridObject.AddComponent<Grid>(4, 20, 100);
+
             Instantiate(gridObject);
+
+            piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
+            piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
+            piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
+            piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
+
+            gameObjects.Add(piece1);
+            gameObjects.Add(piece2);
+            gameObjects.Add(piece3);
+            gameObjects.Add(piece4);
+
+            piece1.Transform.Position = new Vector2(40, 50);
+            piece2.Transform.Position = new Vector2(40, 150);
+            piece3.Transform.Position = new Vector2(40, 250);
+            piece4.Transform.Position = new Vector2(40, 350);
+
 
             foreach (GameObject go in gameObjects)
             {
@@ -118,7 +152,7 @@ namespace Network_Ludo
             timeElapsed += DeltaTime;
 
             mouseState = Mouse.GetState();
-            WriteText(); 
+            WriteText();
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
@@ -131,6 +165,17 @@ namespace Network_Ludo
             foreach (GameObject go in gameObjects)
             {
                 go.Update(gameTime);
+            }
+
+            foreach (GameObject go in gameObjects)
+            {
+                go.Update(gameTime);
+            }
+
+            if (timeElapsed >= .3f)
+            {
+                InputHandler.Instance.Execute();
+                timeElapsed = 0;
             }
 
             foreach (GameObject go in gameObjects)
@@ -212,7 +257,8 @@ namespace Network_Ludo
                     else if (key >= Keys.D0 && key <= Keys.D9)
                     {
                         inputText += (key - Keys.D0).ToString();
-                    } else if (key == Keys.Enter)
+                    }
+                    else if (key == Keys.Enter)
                     {
                         JoinGame();
                     }
@@ -232,5 +278,29 @@ namespace Network_Ludo
             inputText = string.Empty;
         }
 
+        public void CheckState(int roll)
+        {
+            switch (TurnOrder)
+            {
+                case GameState.Player1:
+                    //MOVE
+                    TurnOrder = GameState.Player2;
+                    break;
+                case GameState.Player2:
+                    //MOVE
+                    TurnOrder = GameState.Player3;
+                    break;
+                case GameState.Player3:
+                    //MOVE
+                    TurnOrder = GameState.Player4;
+                    break;
+                case GameState.Player4:
+                    //MOVE
+                    TurnOrder = GameState.Player1;
+                    break;
+                default:
+                    break;       
+            }
+        }
     }
 }

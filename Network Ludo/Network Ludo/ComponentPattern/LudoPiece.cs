@@ -1,6 +1,8 @@
 ﻿using ComponentPattern;
 using Microsoft.Xna.Framework;
 using Network_Ludo;
+using Network_Ludo.CommandPattern;
+using Network_Ludo.ComponentPattern;
 
 namespace ComponentPattern
 {
@@ -22,6 +24,12 @@ namespace ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
+
+        }
+
+        public void Move()
+        {
+            
         }
     }
 }
