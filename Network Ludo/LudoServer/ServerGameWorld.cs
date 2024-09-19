@@ -8,27 +8,27 @@ using System.Threading;
 
 namespace LudoServer
 {
-    public class GameWorld : Game
+    public class ServerGameWorld : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
-        private static GameWorld instance;
+        private static ServerGameWorld instance;
 
-        public static GameWorld Instance
+        public static ServerGameWorld Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new GameWorld();
+                    instance = new ServerGameWorld();
                 }
                 return instance;
             }
         }
 
-        public GameWorld()
+        public ServerGameWorld()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -37,7 +37,11 @@ namespace LudoServer
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            Thread ini = new Thread(Server.Instance.server.Start);
+            ini.IsBackground = true;
+            ini.Start();
+
+            ThreadForWaitingForClient();
 
             base.Initialize();
         }
@@ -66,6 +70,25 @@ namespace LudoServer
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        private void WhileLoopThread()
+        {
+            Thread.Sleep(1000);
+            while (true)
+            {
+                TcpClient client = Server.Instance.server.AcceptTcpClient();
+                Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
+                clientThread.IsBackground = true;
+                clientThread.Start();
+            }
+        }
+
+        private void ThreadForWaitingForClient()
+        {
+            Thread test = new Thread(WhileLoopThread);
+            test.IsBackground = true;
+            test.Start();
         }
     }
 }
