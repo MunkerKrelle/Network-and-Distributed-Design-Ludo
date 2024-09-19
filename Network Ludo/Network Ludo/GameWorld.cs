@@ -1,5 +1,7 @@
 ﻿using ComponentPattern;
 using FactoryPattern;
+using CommandPattern;
+using BuilderPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -332,6 +334,7 @@ namespace Network_Ludo
             player.AddComponent<Player>(inputText, chosenColor, corners[playerList.Count]);
             newGameObjects.Add(player);
             playerList.Add(player.GetComponent<Player>() as Player);
+        }
 
         public void CheckState(int roll)
         {
