@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Network_Ludo.CommandPattern
+namespace CommandPattern
 {
     internal interface ICommand
     {
