@@ -1,11 +1,7 @@
-﻿using Network_Ludo.ComponentPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ComponentPattern;
+using Network_Ludo;
 
-namespace Network_Ludo.CommandPattern
+namespace CommandPattern
 {
     internal class RollCommand : ICommand
     {

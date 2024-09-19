@@ -12,7 +12,7 @@ namespace Network_Ludo
         public float Rotation { get; set; } = 0f;
         public Vector2 Scale { get; set; } = new Vector2(1, 1);
         public Color Color { get; set; } = Color.White;
-        public float Layer {  get; set; }
+        public float Layer { get; set; }
         public SpriteEffects SpriteEffect { get; set; }
 
         public void Transformer(Vector2 Position, float Rotaion, Vector2 Scale, Color Color, float Layer)
@@ -41,7 +41,7 @@ namespace Network_Ludo
         /// </summary>
         /// <param name="a">Positionen der skal oversættes</param>
         /// <returns></returns>
-        public Point VectorToPointConverter(Vector2 a) 
+        public Point VectorToPointConverter(Vector2 a)
         {
             Point PTPosition = new Point((int)a.X / 100, (int)a.Y / 100);
             return PTPosition;

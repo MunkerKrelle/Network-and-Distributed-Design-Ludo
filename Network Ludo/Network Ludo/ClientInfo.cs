@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommandPattern
+namespace Network_Ludo
 {
-    internal interface ICommand
+    public class ClientInfo
     {
-        void Execute();
-
-        void Undo();
+        public string name;
+        public BinaryWriter writer;
     }
 }

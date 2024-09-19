@@ -1,13 +1,8 @@
 ﻿using ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
-using Network_Ludo.ComponentPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Network_Ludo;
 
-namespace Network_Ludo.BuilderPattern
+namespace BuilderPattern
 {
     internal class DieBuilder : IBuilder
     {

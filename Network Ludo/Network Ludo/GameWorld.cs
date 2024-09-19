@@ -1,13 +1,13 @@
 ﻿using ComponentPattern;
 using FactoryPattern;
+using CommandPattern;
+using BuilderPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Network_Ludo.BuilderPattern;
-using Network_Ludo.CommandPattern;
-using Network_Ludo.ComponentPattern;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace Network_Ludo
@@ -43,12 +43,22 @@ namespace Network_Ludo
         GameObject piece3;
         GameObject piece4;
 
+
+        public List<Player> playerList = new List<Player>();
+
         public static MouseState mouseState;
         public static MouseState newState;
         public static bool isPressed;
-        KeyboardState keyState;
-        KeyboardState previousKeyState;
-        string inputText = string.Empty;
+        public KeyboardState keyState;
+        public KeyboardState previousKeyState;
+        public string inputText = string.Empty;
+        public string currentInputText = string.Empty;
+
+        Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
+
+
+        Color[] colors = new Color[] { Color.White, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
+        List<GameObject> colorButtons = new List<GameObject>();
 
         private float timeElapsed;
 
@@ -91,6 +101,18 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            Thread ini = new Thread(Server.Instance.server.Start);
+            ini.IsBackground = true;
+            ini.Start();
+
+            ThreadForWaitingForClient();
+
+            _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
+            _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
+            _graphics.ApplyChanges();
+
+            CreateColorBox();
+            
             Director director = new Director(new DieBuilder());
             GameObject dieGo = director.Construct();
             Die die = dieGo.GetComponent<Die>() as Die;
@@ -118,16 +140,11 @@ namespace Network_Ludo
             piece3.Transform.Position = new Vector2(50, 250);
             piece4.Transform.Position = new Vector2(50, 350);
 
-
             foreach (GameObject go in gameObjects)
             {
                 go.Awake();
             }
-
-            _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
-            _graphics.PreferredBackBufferHeight = 10 * 100 + 1;   // set this value to the desired height of your window
-            _graphics.ApplyChanges();
-
+            
             base.Initialize();
         }
 
@@ -142,7 +159,7 @@ namespace Network_Ludo
 
             font = Content.Load<SpriteFont>("textType");
 
-            //JoinGame();
+            //CreateColorBox();
         }
 
         protected override void Update(GameTime gameTime)
@@ -152,7 +169,6 @@ namespace Network_Ludo
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
-
             mouseState = Mouse.GetState();
             WriteText();
 
@@ -163,15 +179,6 @@ namespace Network_Ludo
             else
             {
                 isPressed = false;
-            }
-            foreach (GameObject go in gameObjects)
-            {
-                go.Update(gameTime);
-            }
-
-            foreach (GameObject go in gameObjects)
-            {
-                go.Update(gameTime);
             }
 
             if (timeElapsed >= .3f)
@@ -185,6 +192,26 @@ namespace Network_Ludo
                 go.Update(gameTime);
             }
 
+            Cleanup();
+        }
+
+        private void WhileLoopThread() 
+        {
+            Thread.Sleep(1000);
+            while (true)
+            {
+                TcpClient client = Server.Instance.server.AcceptTcpClient();
+                Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
+                clientThread.IsBackground = true;
+                clientThread.Start();
+            }   
+        }
+
+        private void ThreadForWaitingForClient() 
+        { 
+            Thread test = new Thread(WhileLoopThread);
+            test.IsBackground = true;
+            test.Start();
 
             base.Update(gameTime);
 
@@ -226,11 +253,16 @@ namespace Network_Ludo
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
-            _spriteBatch.DrawString(font, inputText, new Vector2(100, 100), Color.Black);
+            _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
 
             foreach (GameObject go in gameObjects)
             {
                 go.Draw(_spriteBatch);
+            }
+
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                _spriteBatch.DrawString(font, playerList[i].playerName, corners[i], playerList[i].color, 0, Origin(playerList[i].playerName), 1, SpriteEffects.None, 1f);
             }
 
             _spriteBatch.End();
@@ -263,7 +295,8 @@ namespace Network_Ludo
                     }
                     else if (key == Keys.Enter)
                     {
-                        JoinGame();
+                        currentInputText = inputText;
+                        ShowColorBoxes();
                     }
 
                 }
@@ -271,14 +304,61 @@ namespace Network_Ludo
             previousKeyState = keyState;
         }
 
-        public void JoinGame()
+        private Vector2 Origin(string input)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
-                for (int i = 0; i < 4; i++)
-                {
-                    Instantiate(LudoPieceFactory.Instance.Create(Color.Red, inputText));
-                }
+            Vector2 fontLength = GameWorld.font.MeasureString(input);
+
+            Vector2 originText = new Vector2(fontLength.X / 2f, fontLength.Y / 2f);
+            return originText;
+        }
+
+        public void CreateColorBox()
+        {
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 600 + í * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[i]), colors[i]));
+            //    //colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 - 100), "", () => JoinLudo(colors[colors.Length - 1 - i]), colors[colors.Length - 1 - i]));
+            //}
+
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 0 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[0]), colors[0]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 1 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[1]), colors[1]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 2 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[2]), colors[2]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 3 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[3]), colors[3]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 4 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[4]), colors[4]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 5 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[5]), colors[5]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 6 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[6]), colors[6]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 7 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[7]), colors[7]));
+
+
+            foreach (var button in colorButtons)
+            {
+                gameObjects.Add(button);
+            }
+        }
+
+        public void ShowColorBoxes()
+        {
             inputText = string.Empty;
+
+            foreach (var button in colorButtons)
+            {
+                button.IsActive = true;
+            }
+        }
+
+        private void JoinLudo(Color chosenColor)
+        {
+
+            foreach (var button in colorButtons)
+            {
+                Destroy(button);
+            }
+
+            GameObject player = new GameObject();
+
+            player.AddComponent<Player>(currentInputText, chosenColor, corners[playerList.Count]);
+            newGameObjects.Add(player);
+            playerList.Add(player.GetComponent<Player>() as Player);
         }
 
         public void CheckState(int roll)
