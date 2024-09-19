@@ -35,50 +35,31 @@ namespace Network_Ludo.ComponentPattern
         }
         public int RollDie()
         {
-
-            animator.PlayAnimation("RollDie");
             Roll = rnd.Next(1, 7);
 
-            if (Roll == 1)
+            switch (Roll)
             {
-                animator.PlayAnimation("Idle1");
-                return Roll;
-            }
-            else if (Roll == 2)
-            {
-                animator.PlayAnimation("Idle2");
-                return Roll;
-
-            }
-            else if (Roll == 3)
-            {
-                animator.PlayAnimation("Idle3");
-                return Roll;
-
-            }
-            else if (Roll == 4)
-            {
-                animator.PlayAnimation("Idle4");
-                return Roll;
-
-            }
-            else if (Roll == 5)
-            {
-                animator.PlayAnimation("Idle5");
-                return Roll;
-
-            }
-            else if (Roll == 6)
-            {
-                animator.PlayAnimation("Idle6");
-                return Roll;
-
-            }
-            else
-            {
-                return Roll;
+                case 1:
+                    animator.PlayAnimation("Idle1");
+                    return Roll;
+                case 2:
+                    animator.PlayAnimation("Idle2");
+                    return Roll;
+                case 3:
+                    animator.PlayAnimation("Idle3");
+                    return Roll;
+                case 4:
+                    animator.PlayAnimation("Idle4");
+                    return Roll;
+                case 5:
+                    animator.PlayAnimation("Idle5");
+                    return Roll;
+                case 6:
+                    animator.PlayAnimation("Idle6");
+                    return Roll;
+                default:
+                    return Roll;
             }
         }
-
     }
 }

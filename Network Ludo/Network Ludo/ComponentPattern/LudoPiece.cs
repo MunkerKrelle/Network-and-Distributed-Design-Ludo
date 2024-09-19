@@ -24,12 +24,12 @@ namespace ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
-
+            
         }
 
-        public void Move()
+        public void Move(int roll)
         {
-            
+            GameObject.Transform.Position += new Vector2((10 * roll), 0);
         }
     }
 }

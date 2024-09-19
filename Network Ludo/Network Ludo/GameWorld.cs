@@ -35,7 +35,6 @@ namespace Network_Ludo
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         public static GameState TurnOrder;
-        private int turn;
 
         private static List<Button> buttons = new List<Button>();
 
@@ -43,7 +42,6 @@ namespace Network_Ludo
         GameObject piece2;
         GameObject piece3;
         GameObject piece4;
-
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -91,7 +89,6 @@ namespace Network_Ludo
             Director director = new Director(new DieBuilder());
             GameObject dieGo = director.Construct();
             Die die = dieGo.GetComponent<Die>() as Die;
-            turn = 1;
             gameObjects.Add(dieGo);
 
             InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
@@ -182,6 +179,7 @@ namespace Network_Ludo
             {
                 go.Update(gameTime);
             }
+
 
             base.Update(gameTime);
 
@@ -283,19 +281,19 @@ namespace Network_Ludo
             switch (TurnOrder)
             {
                 case GameState.Player1:
-                    //MOVE
+                    piece1.Transform.Position += new Vector2(105, 0);
                     TurnOrder = GameState.Player2;
                     break;
                 case GameState.Player2:
-                    //MOVE
+                    piece2.Transform.Position += new Vector2(105, 0);
                     TurnOrder = GameState.Player3;
                     break;
                 case GameState.Player3:
-                    //MOVE
+                    piece3.Transform.Position += new Vector2(105, 0);
                     TurnOrder = GameState.Player4;
                     break;
                 case GameState.Player4:
-                    //MOVE
+                    piece4.Transform.Position += new Vector2(105, 0);
                     TurnOrder = GameState.Player1;
                     break;
                 default:
