@@ -29,7 +29,7 @@ namespace ComponentPattern
 
         public void Move()
         {
-            GameObject.Transform.Position += new Vector2((Roll * 10), 0);
+            
         }
     }
 }

@@ -283,15 +283,19 @@ namespace Network_Ludo
             switch (TurnOrder)
             {
                 case GameState.Player1:
+                    //MOVE
                     TurnOrder = GameState.Player2;
                     break;
                 case GameState.Player2:
+                    //MOVE
                     TurnOrder = GameState.Player3;
                     break;
                 case GameState.Player3:
+                    //MOVE
                     TurnOrder = GameState.Player4;
                     break;
                 case GameState.Player4:
+                    //MOVE
                     TurnOrder = GameState.Player1;
                     break;
                 default:
