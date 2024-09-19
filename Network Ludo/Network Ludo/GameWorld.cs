@@ -359,19 +359,19 @@ namespace Network_Ludo
             switch (TurnOrder)
             {
                 case GameState.Player1:
-                    //MOVE
+                    piece1.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player2;
                     break;
                 case GameState.Player2:
-                    //MOVE
+                    piece2.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player3;
                     break;
                 case GameState.Player3:
-                    //MOVE
+                    piece3.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player4;
                     break;
                 case GameState.Player4:
-                    //MOVE
+                    piece4.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player1;
                     break;
                 default:
