@@ -48,7 +48,7 @@ namespace FactoryPattern
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.SetSprite("cellGrid");
             go.Transform.Color = buttonColor;
-            go.AddComponent<Button>(buttonPosition, buttonText, actionFunction);
+            go.AddComponent<Button>(buttonPosition, buttonText, actionFunction, buttonColor);
 
             return go;
         }

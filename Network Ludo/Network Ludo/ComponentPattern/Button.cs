@@ -19,6 +19,7 @@ namespace ComponentPattern
         public bool active = true;
         string buttonText;
         public Action buttonAction;
+        public Color buttonColor;
 
         /// <summary>
         /// Opretter en knap man kan trykke på med musen som kan kører en Action
@@ -26,11 +27,12 @@ namespace ComponentPattern
         /// <param name="buttonPosition">Knappens position på skærmen</param>
         /// <param name="buttonText">Tekst der bliver skrevet på knappen</param>
         /// <param name="buttonFunction">Hvilken function der bliver kørt når knappen bliver trykket</param>
-        public Button(GameObject gameObject, Vector2 buttonPosition, string buttonText, Action buttonAction) : base(gameObject)
+        public Button(GameObject gameObject, Vector2 buttonPosition, string buttonText, Action buttonAction, Color buttonColor) : base(gameObject)
         {
             this.buttonPosition = buttonPosition;
             this.buttonText = buttonText;
             this.buttonAction = buttonAction;
+            this.buttonColor = buttonColor;
         }
 
         public override void Update(GameTime gameTime)
@@ -72,7 +74,7 @@ namespace ComponentPattern
             }
             else
             {
-                GameObject.Transform.Color = Color.White;
+                GameObject.Transform.Color = buttonColor;
             }
         }
 

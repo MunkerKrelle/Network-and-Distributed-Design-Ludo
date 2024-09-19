@@ -121,7 +121,7 @@ namespace Network_Ludo
             mouseState = Mouse.GetState();
             WriteText();
 
-            if (mouseState.LeftButton == ButtonState.Pressed)
+            if (mouseState.LeftButton == ButtonState.Pressed && timeElapsed>1)
             {
                 isPressed = true;
             }
@@ -262,11 +262,7 @@ namespace Network_Ludo
 
             foreach (var button in colorButtons)
             {
-                if (button.Transform.Color == chosenColor)
-                {
-
-                    Destroy(button);
-                }
+                Destroy(button);
             }
 
             GameObject player = new GameObject();

@@ -34,7 +34,7 @@ namespace FactoryPattern
             sr.SetSprite("LudoPiece");
             go.Transform.Scale = new Vector2(0.05f, 0.05f);
             go.Transform.Color = color;
-            go.AddComponent<LudoPiece>(color, name, LudoState.inBase);
+            go.AddComponent<LudoPiece>(name, LudoState.inBase);
 
             return go;
         }
