@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Network_Ludo
 {
@@ -95,6 +97,12 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            Thread ini = new Thread(Server.Instance.server.Start);
+            ini.IsBackground = true;
+            ini.Start();
+
+            ThreadForWaitingForClient();
+
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
@@ -158,7 +166,6 @@ namespace Network_Ludo
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
-
             mouseState = Mouse.GetState();
             WriteText();
 
@@ -183,6 +190,25 @@ namespace Network_Ludo
             }
 
             Cleanup();
+        }
+
+        private void WhileLoopThread() 
+        {
+            Thread.Sleep(1000);
+            while (true)
+            {
+                TcpClient client = Server.Instance.server.AcceptTcpClient();
+                Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
+                clientThread.IsBackground = true;
+                clientThread.Start();
+            }   
+        }
+
+        private void ThreadForWaitingForClient() 
+        { 
+            Thread test = new Thread(WhileLoopThread);
+            test.IsBackground = true;
+            test.Start();
         }
 
         private void Cleanup()
