@@ -89,6 +89,12 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
+            Thread ini = new Thread(Server.Instance.server.Start);
+            ini.IsBackground = true;
+            ini.Start();
+
+            ThreadForWaitingForClient();
+
             Director director = new Director(new DieBuilder());
             GameObject dieGo = director.Construct();
             Die die = dieGo.GetComponent<Die>() as Die;
@@ -126,8 +132,6 @@ namespace Network_Ludo
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 10 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
-
-            Server.Instance.server.Start();
 
             base.Initialize();
         }
@@ -185,17 +189,28 @@ namespace Network_Ludo
                 go.Update(gameTime);
             }
 
-            //while (true)
-            //{
+            base.Update(gameTime);
+
+            Cleanup();
+        }
+
+        private void WhileLoopThread() 
+        {
+            Thread.Sleep(1000);
+            while (true)
+            {
                 TcpClient client = Server.Instance.server.AcceptTcpClient();
                 Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
                 clientThread.IsBackground = true;
                 clientThread.Start();
-            //}
+            }   
+        }
 
-            base.Update(gameTime);
-
-            Cleanup();
+        private void ThreadForWaitingForClient() 
+        { 
+            Thread test = new Thread(WhileLoopThread);
+            test.IsBackground = true;
+            test.Start();
         }
 
         private void Cleanup()
