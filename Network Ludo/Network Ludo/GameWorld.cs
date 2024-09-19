@@ -204,9 +204,9 @@ namespace Network_Ludo
 
         private void ThreadForWaitingForClient() 
         { 
-            Thread test = new Thread(WhileLoopThread);
-            test.IsBackground = true;
-            test.Start();
+            Thread WaitForClient = new Thread(WhileLoopThread);
+            WaitForClient.IsBackground = true;
+            WaitForClient.Start();
         }
 
         private void Cleanup()
@@ -241,7 +241,7 @@ namespace Network_Ludo
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
             _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
