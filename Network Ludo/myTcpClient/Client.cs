@@ -79,7 +79,6 @@ namespace myTcpClient
                 int messageLength = reader.ReadInt32();
                 byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
                 string message = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
-
             }
             if (client.Connected == false) 
             {
@@ -87,7 +86,7 @@ namespace myTcpClient
             }
         }
 
-        static void SendMessage(BinaryWriter writer, Message message)
+        public void SendMessage(BinaryWriter writer, Message message)
         {
             byte[] data = new byte[0];
 
