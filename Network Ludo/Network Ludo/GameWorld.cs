@@ -84,6 +84,11 @@ namespace Network_Ludo
 
         public Dictionary<string, Texture2D> sprites { get; private set; } = new Dictionary<string, Texture2D>();
 
+        private Vector2 piece1StartPos = new Vector2(50, 50);
+        private Vector2 piece2StartPos = new Vector2(50, 150);
+        private Vector2 piece3StartPos = new Vector2(50, 250);
+        private Vector2 piece4StartPos = new Vector2(50, 350);
+
         protected override void Initialize()
         {
             Director director = new Director(new DieBuilder());
@@ -298,6 +303,15 @@ namespace Network_Ludo
                     break;
                 default:
                     break;
+            }
+
+            if (piece1.Transform.Position.X > 1300 || piece2.Transform.Position.X > 1300 || piece3.Transform.Position.X > 1300 || piece4.Transform.Position.X > 1300)
+            {
+                piece1.Transform.Position = piece1StartPos;
+                piece2.Transform.Position = piece2StartPos;
+                piece3.Transform.Position = piece3StartPos;
+                piece4.Transform.Position = piece4StartPos;
+                TurnOrder = GameState.Player1;
             }
         }
     }
