@@ -112,7 +112,6 @@ namespace myTcpClient
                     {
                         client.letters = inputText;
                         client.SendMessage(client.writer, new ChatMessage { message = client.letters});
-                        //ShowColorBoxes();
                     }
                 }
             }
