@@ -1,6 +1,8 @@
 ﻿using Network_Ludo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using FactoryPattern;
+using System.Collections.Generic;
 
 namespace ComponentPattern
 {
@@ -9,20 +11,35 @@ namespace ComponentPattern
     /// </summary>
     public class Player : Component
     {
-        Animator animator;
+        private Animator animator;
+
+        public List<GameObject> ludoPieces = new List<GameObject>();
+
+        public string playerName;
+
+        public Color color;
+        public Vector2 pos; 
 
         /// <summary>
         /// Initialiserer en ny instans af <see cref="Player"/> klassen med det specificerede game object.
         /// </summary>
         /// <param name="gameObject">Det game object, som spilleren er knyttet til.</param>
-        public Player(GameObject gameObject) : base(gameObject)
+        public Player(GameObject gameObject, string playerName, Color color, Vector2 pos) : base(gameObject)
         {
-
+            this.playerName = playerName;
+            this.color = color;
+            this.pos = pos;
         }
 
         public override void Awake()
         {
+            for (int i = 0; i < 4; i++)
+            {
+                ludoPieces.Add(LudoPieceFactory.Instance.Create(color, playerName));
+                ludoPieces[i].Transform.Position = new Vector2(pos.X - 100 + 70 * i, pos.Y + 50);
+                GameWorld.Instance.Instantiate(ludoPieces[i]);
 
+            }
         }
 
         /// <summary>

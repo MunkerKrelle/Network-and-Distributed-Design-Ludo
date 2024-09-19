@@ -6,14 +6,18 @@ using Network_Ludo.ComponentPattern;
 
 namespace ComponentPattern
 {
+    public enum LudoState
+    {
+        inBase, outBase, finished
+    }
+
+
     public class LudoPiece : Component
     {
-        Color color;
         string name;
 
-        public LudoPiece(GameObject gameObject, Color color, string name) : base(gameObject)
+        public LudoPiece(GameObject gameObject, string name, LudoState ludoState) : base(gameObject)
         {
-            this.color = color;
             this.name = name;
         }
 
