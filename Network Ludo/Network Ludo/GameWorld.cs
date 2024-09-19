@@ -50,7 +50,9 @@ namespace Network_Ludo
         public static bool isPressed;
         public KeyboardState keyState;
         public KeyboardState previousKeyState;
-        public static string inputText = string.Empty;
+        public string inputText = string.Empty;
+        public string currentInputText = string.Empty;
+
         Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
 
 
@@ -160,22 +162,13 @@ namespace Network_Ludo
             mouseState = Mouse.GetState();
             WriteText();
 
-            if (mouseState.LeftButton == ButtonState.Pressed && timeElapsed>1)
+            if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 isPressed = true;
             }
             else
             {
                 isPressed = false;
-            }
-            foreach (GameObject go in gameObjects)
-            {
-                go.Update(gameTime);
-            }
-
-            foreach (GameObject go in gameObjects)
-            {
-                go.Update(gameTime);
             }
 
             if (timeElapsed >= .3f)
@@ -188,8 +181,6 @@ namespace Network_Ludo
             {
                 go.Update(gameTime);
             }
-
-            base.Update(gameTime);
 
             Cleanup();
         }
@@ -271,6 +262,7 @@ namespace Network_Ludo
                     }
                     else if (key == Keys.Enter)
                     {
+                        currentInputText = inputText;
                         ShowColorBoxes();
                     }
 
@@ -331,7 +323,7 @@ namespace Network_Ludo
 
             GameObject player = new GameObject();
 
-            player.AddComponent<Player>(inputText, chosenColor, corners[playerList.Count]);
+            player.AddComponent<Player>(currentInputText, chosenColor, corners[playerList.Count]);
             newGameObjects.Add(player);
             playerList.Add(player.GetComponent<Player>() as Player);
         }

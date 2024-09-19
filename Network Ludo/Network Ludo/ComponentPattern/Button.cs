@@ -68,7 +68,7 @@ namespace ComponentPattern
         /// </summary>
         public void MouseOnButton()
         {
-            if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y && GameObject.IsActive == true)
+            if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y)
             {
                 GameObject.Transform.Color = Color.LightGray;
             }
@@ -83,11 +83,10 @@ namespace ComponentPattern
         /// </summary>
         public void MousePressed()
         {
-            if (GameWorld.isPressed == true && GameObject.IsActive == true)
+            if (GameWorld.isPressed == true)
             {
                 if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y)
                 {
-                    GameWorld.isPressed = false;
                     GameObject.Transform.Color = Color.Yellow;
                     buttonAction.Invoke();
                 }
