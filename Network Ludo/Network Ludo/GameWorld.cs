@@ -108,10 +108,10 @@ namespace Network_Ludo
             gameObjects.Add(piece3);
             gameObjects.Add(piece4);
 
-            piece1.Transform.Position = new Vector2(40, 50);
-            piece2.Transform.Position = new Vector2(40, 150);
-            piece3.Transform.Position = new Vector2(40, 250);
-            piece4.Transform.Position = new Vector2(40, 350);
+            piece1.Transform.Position = new Vector2(50, 50);
+            piece2.Transform.Position = new Vector2(50, 150);
+            piece3.Transform.Position = new Vector2(50, 250);
+            piece4.Transform.Position = new Vector2(50, 350);
 
 
             foreach (GameObject go in gameObjects)
@@ -281,23 +281,23 @@ namespace Network_Ludo
             switch (TurnOrder)
             {
                 case GameState.Player1:
-                    piece1.Transform.Position += new Vector2(105, 0);
+                    piece1.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player2;
                     break;
                 case GameState.Player2:
-                    piece2.Transform.Position += new Vector2(105, 0);
+                    piece2.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player3;
                     break;
                 case GameState.Player3:
-                    piece3.Transform.Position += new Vector2(105, 0);
+                    piece3.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player4;
                     break;
                 case GameState.Player4:
-                    piece4.Transform.Position += new Vector2(105, 0);
+                    piece4.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player1;
                     break;
                 default:
-                    break;       
+                    break;
             }
         }
     }
