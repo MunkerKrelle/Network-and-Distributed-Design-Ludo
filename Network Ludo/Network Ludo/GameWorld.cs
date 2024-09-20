@@ -208,8 +208,8 @@ namespace Network_Ludo
             }
         }
 
-        private void ThreadForWaitingForClient() 
-        { 
+        private void ThreadForWaitingForClient()
+        {
             Thread WaitForClient = new Thread(WhileLoopThread);
             WaitForClient.IsBackground = true;
             WaitForClient.Start();
@@ -247,7 +247,7 @@ namespace Network_Ludo
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
+
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
             _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
@@ -358,28 +358,28 @@ namespace Network_Ludo
             playerList.Add(player.GetComponent<Player>() as Player);
         }
 
-        public void CheckState(int roll)
+        public int CheckState(int roll)
         {
             switch (TurnOrder)
             {
                 case GameState.Player1:
                     piece1.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player2;
-                    break;
+                    return roll;
                 case GameState.Player2:
                     piece2.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player3;
-                    break;
+                    return roll;
                 case GameState.Player3:
                     piece3.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player4;
-                    break;
+                    return roll;
                 case GameState.Player4:
                     piece4.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player1;
-                    break;
+                    return roll;
                 default:
-                    break;
+                    return roll;
             }
 
             if (piece1.Transform.Position.X > 1300 || piece2.Transform.Position.X > 1300 || piece3.Transform.Position.X > 1300 || piece4.Transform.Position.X > 1300)

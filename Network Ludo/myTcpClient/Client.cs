@@ -101,6 +101,9 @@ namespace myTcpClient
                 case MessageType.List:
                     data = MessagePackSerializer.Serialize((ListMessage)message);
                     break;
+                case MessageType.Roll:
+                    data = MessagePackSerializer.Serialize((RollMessage)message);
+                    break;
                 default:
                     Console.WriteLine($"Unable to serialize type: " + message.type);
                     break;
