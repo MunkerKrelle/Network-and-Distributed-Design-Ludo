@@ -85,7 +85,7 @@ namespace Network_Ludo
                         case MessageType.Roll:
                             RollMessage rollMsg = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
                             roll = GameWorld.Instance.CheckState(roll);
-                            SendToClients($"{clientId} has rolled {roll} and moves {roll} spaces");
+                            SendToClients($"Bob has rolled {roll} and moves {roll} spaces");
                             break;
                         default:
                             break;
