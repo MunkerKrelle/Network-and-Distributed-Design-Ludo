@@ -84,7 +84,7 @@ namespace myTcpClient
                 //InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
                 int myDiceRoll = 5;
                 string myDiceRollString = myDiceRoll.ToString();
-                client.SendMessage(client.writer, new RollDiceMessage { rollRequest = myDiceRollString });
+                //client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
 
             }
 
