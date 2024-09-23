@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using MessagePack;
+using System.Drawing;
 
 namespace LudoServer
 {
@@ -26,14 +27,17 @@ namespace LudoServer
             }
         }
 
-        Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+
+        public Color[] availableColors = new Color[] { Color.White, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
+
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
         //server.Start();
         //Console.WriteLine("Server started... listening on port 12000");
 
         void SendToClients(string message, params ClientInfo[] clients)
-    {
+        {
             byte[] data = MessagePackSerializer.Serialize(message);
             foreach (ClientInfo client in clients)
             {
@@ -45,11 +49,11 @@ namespace LudoServer
         }
 
         public void HandleClient(TcpClient client)
-    {
-        Guid clientId = Guid.NewGuid();
+        {
+            Guid clientId = Guid.NewGuid();
 
-        BinaryWriter writer = new BinaryWriter(client.GetStream());
-        BinaryReader reader = new BinaryReader(client.GetStream());
+            BinaryWriter writer = new BinaryWriter(client.GetStream());
+            BinaryReader reader = new BinaryReader(client.GetStream());
 
             try
             {
@@ -66,7 +70,7 @@ namespace LudoServer
                     {
                         case MessageType.Join:
                             JoinMessage joinMsg = MessagePackSerializer.Deserialize<JoinMessage>(payLoadAsBytes);
-                            idToClientInfo.Add(clientId, new ClientInfo { name = joinMsg.name, writer = writer });
+                            idToClientInfo.Add(clientId, new ClientInfo { name = joinMsg.name, playerColor = Color.AliceBlue, writer = writer });
                             string welcomeMsg = "New user joined!! Welcome: " + joinMsg.name;
                             Console.WriteLine(welcomeMsg);
                             SendToClients(welcomeMsg, idToClientInfo.Values.ToArray());
@@ -99,6 +103,13 @@ namespace LudoServer
 
         }
 
-}
+        public Color CheckColors(Color chosenColor)
+        {
+            foreach (Color c in availableColors)
+
+            return 
+        }
+
+    }
 }
 
