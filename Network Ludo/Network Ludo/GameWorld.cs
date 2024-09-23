@@ -356,28 +356,28 @@ namespace Network_Ludo
             playerList.Add(player.GetComponent<Player>() as Player);
         }
 
-        public int CheckState(int roll)
+        public void CheckState(int roll)
         {
             switch (TurnOrder)
             {
                 case GameState.Player1:
                     piece1.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player2;
-                    return roll;
+                    break;
                 case GameState.Player2:
                     piece2.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player3;
-                    return roll;
+                    break;
                 case GameState.Player3:
                     piece3.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player4;
-                    return roll;
+                    break;
                 case GameState.Player4:
                     piece4.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player1;
-                    return roll;
+                    break;
                 default:
-                    return roll;
+                    break;
             }
 
             if (piece1.Transform.Position.X > 1300 || piece2.Transform.Position.X > 1300 || piece3.Transform.Position.X > 1300 || piece4.Transform.Position.X > 1300)

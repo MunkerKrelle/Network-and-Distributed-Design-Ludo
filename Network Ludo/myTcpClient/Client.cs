@@ -35,14 +35,14 @@ namespace myTcpClient
             while (test == true)
             {
                 string userName = "bob"; //my change
-                RollMessage rollMes = new RollMessage();
+                //RollMessage rollMes = new RollMessage();
                 userName.Replace(" ", "");
                 if (userName.Length > 0)
                 {
 
                     SendMessage(writer, new JoinMessage { name = userName });
-                    SendMessage(writer, rollMes);
-                    Console.WriteLine(rollMes);
+                    //SendMessage(writer, rollMes);
+                    //Console.WriteLine(rollMes);
                     test = false;
                     break;
                 }
