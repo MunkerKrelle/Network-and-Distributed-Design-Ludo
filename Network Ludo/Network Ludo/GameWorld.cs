@@ -44,6 +44,13 @@ namespace Network_Ludo
         GameObject piece3;
         GameObject piece4;
 
+        private List<Vector2> startPos = new List<Vector2>() { 
+            new Vector2(50, 50),
+            new Vector2(50, 150),
+            new Vector2(50, 250),
+            new Vector2(50, 350)
+    };
+
         private Vector2 piece1StartPos = new Vector2(50, 50);
         private Vector2 piece2StartPos = new Vector2(50, 150);
         private Vector2 piece3StartPos = new Vector2(50, 250);

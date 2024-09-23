@@ -24,7 +24,7 @@ namespace LudoServer
             }
         }
 
-        private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        public Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public List <Color> availableColors = new List<Color> { Color.White, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
 

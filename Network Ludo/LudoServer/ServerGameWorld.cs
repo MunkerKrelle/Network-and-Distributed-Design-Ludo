@@ -21,6 +21,11 @@ namespace LudoServer
 
         List<ClientInfo> clients = new List<ClientInfo>();
         public static GameState TurnOrder;
+        private List<Vector2> startPos = new List<Vector2>() {
+            new Vector2(50, 50),
+            new Vector2(50, 150),
+            new Vector2(50, 250),
+            new Vector2(50, 350) };
 
         public static ServerGameWorld Instance
         {
@@ -133,10 +138,10 @@ namespace LudoServer
 
             if (clients[0].position.X > 1300 || clients[0].position.X > 1300 || clients[0].position.X > 1300 || clients[0].position.X > 1300)
             {
-                clients[0].position = piece1StartPos;
-                clients[1].position = piece2StartPos;
-                clients[2].position = piece3StartPos;
-                clients[3].position = piece4StartPos;
+                clients[0].position = startPos[0];
+                clients[1].position = startPos[1];
+                clients[2].position = startPos[2];
+                clients[3].position = startPos[3];
                 TurnOrder = GameState.Player1;
             }
         }

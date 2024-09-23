@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using Microsoft.Xna.Framework;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LudoServer
 {
@@ -12,6 +7,8 @@ namespace LudoServer
     {
         public string name;
         public Color playerColor;
+        public Vector2 position;
+        public GameState playerState;
         public BinaryWriter writer;
     }
 }
