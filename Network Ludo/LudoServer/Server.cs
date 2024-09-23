@@ -29,7 +29,7 @@ namespace LudoServer
 
         private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
-        public Color[] availableColors = new Color[] { Color.White, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
+        public List <Color> availableColors = new List<Color> { Color.White, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
 
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
@@ -106,10 +106,14 @@ namespace LudoServer
         public Color CheckColors(Color chosenColor)
         {
             foreach (Color c in availableColors)
+                if (c == chosenColor)
+                {
+                    availableColors.Remove(c);
 
-            return 
+                    return chosenColor;
+                }
+            return Color.Empty;
         }
-
     }
 }
 
