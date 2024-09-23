@@ -97,8 +97,6 @@ namespace Network_Ludo
             IsMouseVisible = true;
         }
 
-        public Dictionary<string, Texture2D> sprites { get; private set; } = new Dictionary<string, Texture2D>();
-
         protected override void Initialize()
         {
             Thread ini = new Thread(Server.Instance.server.Start);
