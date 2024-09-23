@@ -61,7 +61,7 @@ namespace myTcpClient
             //string message = "i am so awesome";
             if (message == "list")
             {
-                SendMessage(writer, new ListMessage());
+                SendMessage(writer, new ListMessage()); //this needs to be reintroduced when sending message.
             }
             else
             {
@@ -100,6 +100,9 @@ namespace myTcpClient
                     break;
                 case MessageType.List:
                     data = MessagePackSerializer.Serialize((ListMessage)message);
+                    break;
+                case MessageType.Roll:
+                    data = MessagePackSerializer.Serialize((RollDiceMessage)message);
                     break;
                 default:
                     Console.WriteLine($"Unable to serialize type: " + message.type);
