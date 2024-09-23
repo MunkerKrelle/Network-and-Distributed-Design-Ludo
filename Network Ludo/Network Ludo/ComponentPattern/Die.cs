@@ -29,7 +29,7 @@ namespace ComponentPattern
             sr.SetSprite("Side1");
             GameObject.Transform.Layer = 0.9f;
         }
-        public int RollDie()
+        public int RollDie(int roll)
         {
 
             animator.PlayAnimation("RollDie");

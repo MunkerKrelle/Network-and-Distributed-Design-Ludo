@@ -87,6 +87,12 @@ namespace myTcpClient
             }
         }
 
+        public void DrawChat(string text) 
+        {
+            
+
+        }
+
         public void SendMessage(BinaryWriter writer, Message message)
         {
             byte[] data = new byte[0];

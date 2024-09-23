@@ -131,6 +131,7 @@ namespace myTcpClient
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             
+            
 
             base.Draw(gameTime);
         }
