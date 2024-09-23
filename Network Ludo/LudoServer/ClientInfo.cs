@@ -8,7 +8,6 @@ namespace LudoServer
         public string name;
         public Color playerColor;
         public Vector2 position;
-        public GameState playerState;
         public BinaryWriter writer;
     }
 }

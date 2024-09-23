@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using LudoServer;
 
 namespace Network_Ludo
 {
@@ -43,6 +44,10 @@ namespace Network_Ludo
         GameObject piece2;
         GameObject piece3;
         GameObject piece4;
+
+        private Client client = new Client();
+        public List<TcpClient> myClientsList = new List<TcpClient>();
+        private string _stringValue = string.Empty;
 
         private List<Vector2> startPos = new List<Vector2>() { 
             new Vector2(50, 50),
@@ -106,11 +111,14 @@ namespace Network_Ludo
 
         protected override void Initialize()
         {
-            Thread ini = new Thread(Server.Instance.server.Start);
-            ini.IsBackground = true;
-            ini.Start();
+            //Thread ini = new Thread(Server.Instance.server.Start);
+            //ini.IsBackground = true;
+            //ini.Start();
 
-            ThreadForWaitingForClient();
+            //ThreadForWaitingForClient();
+
+            client.GetMeGoing();
+            client.RunOnce();
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
@@ -176,7 +184,29 @@ namespace Network_Ludo
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
             mouseState = Mouse.GetState();
-            WriteText();
+            KeyboardState keyState = Keyboard.GetState();
+
+            if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+            {
+                client.isChatting = true;
+            }
+
+            if (client.isChatting == true)
+            {
+                EnterMessage(keyState);
+            }
+
+
+            if (keyState.IsKeyDown(Keys.B))
+            {
+                //GameWorld.Instance.CheckState(4);
+                //InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
+                int myDiceRoll = 5;
+                string myDiceRollString = myDiceRoll.ToString();
+                client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
+
+            }
+
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
@@ -201,24 +231,24 @@ namespace Network_Ludo
             Cleanup();
         }
 
-        private void WhileLoopThread()
-        {
-            Thread.Sleep(1000);
-            while (true)
-            {
-                TcpClient client = Server.Instance.server.AcceptTcpClient();
-                Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
-                clientThread.IsBackground = true;
-                clientThread.Start();
-            }
-        }
+        //private void WhileLoopThread()
+        //{
+        //    Thread.Sleep(1000);
+        //    while (true)
+        //    {
+        //        TcpClient client = Server.Instance.server.AcceptTcpClient();
+        //        Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
+        //        clientThread.IsBackground = true;
+        //        clientThread.Start();
+        //    }
+        //}
 
-        private void ThreadForWaitingForClient()
-        {
-            Thread WaitForClient = new Thread(WhileLoopThread);
-            WaitForClient.IsBackground = true;
-            WaitForClient.Start();
-        }
+        //private void ThreadForWaitingForClient()
+        //{
+        //    Thread WaitForClient = new Thread(WhileLoopThread);
+        //    WaitForClient.IsBackground = true;
+        //    WaitForClient.Start();
+        //}
 
         private void Cleanup()
         {
@@ -272,7 +302,7 @@ namespace Network_Ludo
             base.Draw(gameTime);
         }
 
-        public void WriteText()
+        public void EnterMessage(KeyboardState keyState)
         {
             keyState = Keyboard.GetState();
 
@@ -297,13 +327,13 @@ namespace Network_Ludo
                     }
                     else if (key == Keys.Enter)
                     {
-                        currentInputText = inputText;
-                        ShowColorBoxes();
+                        client.letters = inputText;
+                        client.SendMessage(client.writer, new ChatMessage { message = client.letters });
                     }
-
                 }
             }
             previousKeyState = keyState;
+
         }
 
         private Vector2 Origin(string input)

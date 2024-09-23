@@ -4,10 +4,11 @@ using System.Net.Sockets;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using MessagePack;
+using LudoServer;
 using Network_Ludo;
 
 
-namespace myTcpClient
+namespace Network_Ludo
 {
     public class Client
     {

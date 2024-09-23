@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -18,6 +19,8 @@ namespace LudoServer
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static ServerGameWorld instance;
+
+        private List<string> messageList = new List<string>();
 
         List<ClientInfo> clients = new List<ClientInfo>();
         public static GameState TurnOrder;
@@ -80,7 +83,12 @@ namespace LudoServer
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            Vector2 starpoint = new Vector2(500,500);
+
+            foreach (string message in messageList)
+            {
+                _spriteBatch.DrawString(Font, message, new Vector2 (starpoint.X, starpoint.Y+ 50));
+            }
 
             base.Draw(gameTime);
         }
