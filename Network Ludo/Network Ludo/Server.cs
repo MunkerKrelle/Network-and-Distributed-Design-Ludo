@@ -33,7 +33,7 @@ namespace Network_Ludo
         //Console.WriteLine("Server started... listening on port 12000");
 
         void SendToClients(string message, params ClientInfo[] clients)
-    {
+        {
             byte[] data = MessagePackSerializer.Serialize(message);
             foreach (ClientInfo client in clients)
             {
@@ -57,11 +57,11 @@ namespace Network_Ludo
         }
 
         public void HandleClient(TcpClient client)
-    {
-        Guid clientId = Guid.NewGuid();
+        {
+            Guid clientId = Guid.NewGuid();
 
-        BinaryWriter writer = new BinaryWriter(client.GetStream());
-        BinaryReader reader = new BinaryReader(client.GetStream());
+            BinaryWriter writer = new BinaryWriter(client.GetStream());
+            BinaryReader reader = new BinaryReader(client.GetStream());
 
             try
             {
@@ -95,7 +95,7 @@ namespace Network_Ludo
                             SendToClients(listOfClients, idToClientInfo[clientId]);
                             break;
                         case MessageType.Roll:
-                            roll = myRandom.Next(1,7);
+                            roll = myRandom.Next(1, 7);
                             RollMessage rolledRequest = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
                             //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
                             //Console.WriteLine(chatMsgWithName);
@@ -131,6 +131,6 @@ namespace Network_Ludo
 
         }
 
-}
+    }
 }
 

@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace LudoServer
 {
+
+    public enum GameState { Player1, Player2, Player3, Player4 }
+
     public class ServerGameWorld : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -15,6 +18,9 @@ namespace LudoServer
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static ServerGameWorld instance;
+
+        List<ClientInfo> clients = new List<ClientInfo>();
+        public static GameState TurnOrder;
 
         public static ServerGameWorld Instance
         {
@@ -42,6 +48,8 @@ namespace LudoServer
             ini.Start();
 
             ThreadForWaitingForClient();
+
+            GetPlayers();
 
             base.Initialize();
         }
@@ -89,6 +97,48 @@ namespace LudoServer
             Thread test = new Thread(WhileLoopThread);
             test.IsBackground = true;
             test.Start();
+        }
+
+        private void GetPlayers()
+        {        
+            foreach (ClientInfo player in Server.Instance.idToClientInfo.Values)
+            {
+                clients.Add(player);
+            }
+        }
+
+        public void CheckState(int roll)
+        {
+            switch (TurnOrder)
+            {
+                case GameState.Player1:
+                    clients[0].position += new Vector2((100 * roll), 0);
+                    TurnOrder = GameState.Player2;
+                    break;
+                case GameState.Player2:
+                    clients[1].position += new Vector2((100 * roll), 0);
+                    TurnOrder = GameState.Player3;
+                    break;
+                case GameState.Player3:
+                    clients[2].position += new Vector2((100 * roll), 0);
+                    TurnOrder = GameState.Player4;
+                    break;
+                case GameState.Player4:
+                    clients[3].position += new Vector2((100 * roll), 0);
+                    TurnOrder = GameState.Player1;
+                    break;
+                default:
+                    break;
+            }
+
+            if (clients[0].position.X > 1300 || clients[0].position.X > 1300 || clients[0].position.X > 1300 || clients[0].position.X > 1300)
+            {
+                clients[0].position = piece1StartPos;
+                clients[1].position = piece2StartPos;
+                clients[2].position = piece3StartPos;
+                clients[3].position = piece4StartPos;
+                TurnOrder = GameState.Player1;
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace LudoServer
 {
-    public enum MessageType { Join = 0, Chat = 1, List = 2 }
+    public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 }
     [MessagePackObject]
     public abstract class Message
     {
@@ -32,5 +32,14 @@ namespace LudoServer
     {
         [IgnoreMember]
         public override MessageType type => MessageType.List;
+    }
+
+    public class RollMessage : Message
+    {
+        [Key(0)]
+        public string roll;
+
+        [IgnoreMember]
+        public override MessageType type => MessageType.Roll;
     }
 }
