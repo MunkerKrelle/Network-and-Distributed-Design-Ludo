@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Network_Ludo;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
@@ -130,7 +131,6 @@ namespace myTcpClient
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            
 
             base.Draw(gameTime);
         }
