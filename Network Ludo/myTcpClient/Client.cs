@@ -28,20 +28,21 @@ namespace myTcpClient
             ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
 
         }
-        
-        public void RunOnce() 
+
+        public void RunOnce()
         {
             writer = new BinaryWriter(client.GetStream());
             while (test == true)
             {
-                Console.WriteLine("Write a username...");
-                //string userName = Console.ReadLine(); //original code
                 string userName = "bob"; //my change
+                RollMessage rollMes = new RollMessage();
                 userName.Replace(" ", "");
                 if (userName.Length > 0)
                 {
 
                     SendMessage(writer, new JoinMessage { name = userName });
+                    SendMessage(writer, rollMes);
+                    Console.WriteLine(rollMes);
                     test = false;
                     break;
                 }
@@ -55,7 +56,7 @@ namespace myTcpClient
             receiveThread.Start();
         }
 
-        public void MyMessages(string message) 
+        public void MyMessages(string message)
         {
             //string message = Console.ReadLine(); //old code
             //string message = "i am so awesome";
@@ -80,7 +81,7 @@ namespace myTcpClient
                 byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
                 string message = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
             }
-            if (client.Connected == false) 
+            if (client.Connected == false)
             {
                 Console.WriteLine("no more client");
             }
@@ -100,6 +101,9 @@ namespace myTcpClient
                     break;
                 case MessageType.List:
                     data = MessagePackSerializer.Serialize((ListMessage)message);
+                    break;
+                case MessageType.Roll:
+                    data = MessagePackSerializer.Serialize((RollMessage)message);
                     break;
                 default:
                     Console.WriteLine($"Unable to serialize type: " + message.type);

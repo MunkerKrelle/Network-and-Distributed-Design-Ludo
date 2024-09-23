@@ -56,6 +56,7 @@ namespace Network_Ludo
                 while (client.Connected)
                 {
                     int messageLength = reader.ReadInt32();
+                    int roll = 0;
 
                     byte messageType = reader.ReadByte();
                     MessageType recievedType = (MessageType)messageType;
@@ -80,6 +81,11 @@ namespace Network_Ludo
                         case MessageType.List:
                             string listOfClients = string.Join("\n", idToClientInfo.Values.Select(x => x.name));
                             SendToClients(listOfClients, idToClientInfo[clientId]);
+                            break;
+                        case MessageType.Roll:
+                            RollMessage rollMsg = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
+                            roll = GameWorld.Instance.CheckState(roll);
+                            SendToClients($"Bob has rolled {roll} and moves {roll} spaces");
                             break;
                         default:
                             break;
