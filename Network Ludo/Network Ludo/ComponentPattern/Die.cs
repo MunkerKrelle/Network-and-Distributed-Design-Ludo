@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Network_Ludo;
+using SharpDX.DirectWrite;
 using System;
 
 namespace ComponentPattern
 {
     internal class Die : Component
     {
-        private Random rnd;
-        public int Roll { get; set; }
+        private int roll;
         private Animator animator;
 
         public Die(GameObject gameObject) : base(gameObject)
@@ -19,7 +19,6 @@ namespace ComponentPattern
             animator = GameObject.GetComponent<Animator>() as Animator;
             GameObject.Transform.Scale = new Vector2(.5f, .5f);
             GameObject.IsActive = true;
-            rnd = new Random();
         }
 
         public override void Start()
@@ -29,51 +28,43 @@ namespace ComponentPattern
             sr.SetSprite("Side1");
             GameObject.Transform.Layer = 0.9f;
         }
-        public int RollDie()
+
+        public override void Update(GameTime gameTime)
+        {
+            roll = Server.Instance.roll; 
+        }
+        public void AnimateDie(int roll)
         {
 
-            animator.PlayAnimation("RollDie");
-            //Roll = rnd.Next(1, 7);
+            animator.PlayAnimation("AnimateDie");
 
-            if (Roll == 1)
+            if (roll == 1)
             {
                 animator.PlayAnimation("Idle1");
-                
-                return Roll;
             }
-            else if (Roll == 2)
+            else if (roll == 2)
             {
                 animator.PlayAnimation("Idle2");
-                return Roll;
-
             }
-            else if (Roll == 3)
+            else if (roll == 3)
             {
                 animator.PlayAnimation("Idle3");
-                return Roll;
-
             }
-            else if (Roll == 4)
+            else if (roll == 4)
             {
                 animator.PlayAnimation("Idle4");
-                return Roll;
-
             }
-            else if (Roll == 5)
+            else if (roll == 5)
             {
                 animator.PlayAnimation("Idle5");
-                return Roll;
-
             }
-            else if (Roll == 6)
+            else if (roll == 6)
             {
                 animator.PlayAnimation("Idle6");
-                return Roll;
-
             }
             else
             {
-                return Roll;
+                return;
             }
         }
 
