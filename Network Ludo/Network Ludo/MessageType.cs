@@ -39,13 +39,12 @@ namespace Network_Ludo
         public override MessageType type => MessageType.List;
     }
 
-    public class RollDiceMessage : Message
+    public class RollMessage : Message
     {
+        [Key(0)]
+        public int roll;
+
         [IgnoreMember]
         public override MessageType type => MessageType.Roll;
-
-        [Key(0)]
-        public string rollRequest;
     }
-
 }
