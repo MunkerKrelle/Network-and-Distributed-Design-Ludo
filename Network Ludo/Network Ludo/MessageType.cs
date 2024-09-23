@@ -42,7 +42,7 @@ namespace Network_Ludo
     public class RollMessage : Message
     {
         [Key(0)]
-        public int roll;
+        public string roll;
 
         [IgnoreMember]
         public override MessageType type => MessageType.Roll;
