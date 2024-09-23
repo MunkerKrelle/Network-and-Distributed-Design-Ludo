@@ -8,7 +8,7 @@ namespace LudoServer
         [STAThread]
         static void Main()
         {
-            GameWorld.Instance.Run();
+            ServerGameWorld.Instance.Run();
         }
     }
 }
