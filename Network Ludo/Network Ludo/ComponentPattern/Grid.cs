@@ -93,16 +93,7 @@ namespace ComponentPattern
                 for (int col = 0; col < cols; col++)
                 {
                     // Tegn selve cellen med en lavere layerDepth (baggrund)
-                    spriteBatch.Draw(
-                        GetTexture(spriteBatch.GraphicsDevice, cellColors[row, col]),
-                        grid[row, col],
-                        null,
-                        cellColors[row, col],
-                        0f,
-                        Vector2.Zero,
-                        SpriteEffects.None,
-                        cellLayerDepth
-                    );
+                    spriteBatch.Draw(GetTexture(spriteBatch.GraphicsDevice, cellColors[row, col]), grid[row, col], null, cellColors[row, col], 0f, Vector2.Zero, SpriteEffects.None, cellLayerDepth);
 
                     int lineWidth = 2;  
 
@@ -113,8 +104,7 @@ namespace ComponentPattern
                     spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Left, grid[row, col].Top, cellSize, lineWidth), null, Color.Black, 0f,Vector2.Zero, SpriteEffects.None, lineLayerDepth);
 
                     
-                    spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Right - lineWidth, grid[row, col].Top, lineWidth, cellSize), null, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, lineLayerDepth
-                    );
+                    spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Right - lineWidth, grid[row, col].Top, lineWidth, cellSize), null, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, lineLayerDepth);
 
                     
                     spriteBatch.Draw(sr.Sprite, new Rectangle(grid[row, col].Left, grid[row, col].Bottom - lineWidth, cellSize, lineWidth), null, Color.Black, 0f, Vector2.Zero, SpriteEffects.None, lineLayerDepth);
