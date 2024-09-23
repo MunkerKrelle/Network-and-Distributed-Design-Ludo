@@ -13,7 +13,7 @@ namespace CommandPattern
         }
         public void Execute()
         {
-            GameWorld.Instance.CheckState(die.RollDie());
+            die.AnimateDie(Server.Instance.roll);
         }
 
         public void Undo()
