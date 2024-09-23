@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -19,6 +18,8 @@ namespace LudoServer
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         private static ServerGameWorld instance;
+
+        public static SpriteFont font;
 
         private List<string> messageList = new List<string>();
 
@@ -83,11 +84,11 @@ namespace LudoServer
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Vector2 starpoint = new Vector2(500,500);
+            Vector2 starpoint = new Vector2(500, 500);
 
             foreach (string message in messageList)
             {
-                _spriteBatch.DrawString(Font, message, new Vector2 (starpoint.X, starpoint.Y+ 50));
+                _spriteBatch.DrawString(font, message, new Vector2(starpoint.X, starpoint.Y + 50), Color.Black);
             }
 
             base.Draw(gameTime);
@@ -113,7 +114,7 @@ namespace LudoServer
         }
 
         private void GetPlayers()
-        {        
+        {
             foreach (ClientInfo player in Server.Instance.idToClientInfo.Values)
             {
                 clients.Add(player);
