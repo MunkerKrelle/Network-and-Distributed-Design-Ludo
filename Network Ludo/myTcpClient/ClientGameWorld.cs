@@ -66,10 +66,7 @@ namespace myTcpClient
                 Exit();
 
             KeyboardState keyState = Keyboard.GetState();
-            if (keyState.IsKeyDown(Keys.B))
-            {
-                Console.WriteLine("key was pressed");
-            }
+
             if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
             {
                 client.isChatting = true;
@@ -79,7 +76,17 @@ namespace myTcpClient
             {
                 EnterMessage(keyState);
             }
+
             
+            if (keyState.IsKeyDown(Keys.B))
+            {
+                //GameWorld.Instance.CheckState(4);
+                //InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
+                int myDiceRoll = 5;
+                string myDiceRollString = myDiceRoll.ToString();
+                //client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
+
+            }
 
             //client.MyMessages("i am so awesome");
             base.Update(gameTime);
@@ -116,26 +123,6 @@ namespace myTcpClient
                 }
             }
             previousKeyState = keyState;
-
-            //var keys = keyState.GetPressedKeys();
-
-            //if (keys.Length > 0)
-            //{
-            //    string keyValue = keys[0].ToString();
-            //    if (keyValue != "Enter")
-            //    {
-            //        client.letters += keyValue; //needs a cooldown
-            //    }
-            //}
-            //if (keyState.IsKeyDown(Keys.Home))
-            //{
-            //    client.isChatting = false;
-            //}
-
-            //if (client.isChatting == true) 
-            //{
-
-            //}
 
         }
 

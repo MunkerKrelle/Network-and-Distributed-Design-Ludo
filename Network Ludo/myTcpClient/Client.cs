@@ -62,7 +62,7 @@ namespace myTcpClient
             //string message = "i am so awesome";
             if (message == "list")
             {
-                SendMessage(writer, new ListMessage());
+                SendMessage(writer, new ListMessage()); //this needs to be reintroduced when sending message.
             }
             else
             {

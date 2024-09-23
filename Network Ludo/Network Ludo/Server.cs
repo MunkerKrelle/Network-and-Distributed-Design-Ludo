@@ -44,6 +44,18 @@ namespace Network_Ludo
             }
         }
 
+        void MovePieceForClients(int message, params ClientInfo[] clients)
+        {
+            byte[] data = MessagePackSerializer.Serialize(message.ToString());
+            foreach (ClientInfo client in clients)
+            {
+                //Send the length of the message as 4 - byte integer
+                client.writer.Write(data.Length);
+                client.writer.Write(data);
+                client.writer.Flush();
+            }
+        }
+
         public void HandleClient(TcpClient client)
     {
         Guid clientId = Guid.NewGuid();
@@ -82,6 +94,16 @@ namespace Network_Ludo
                             string listOfClients = string.Join("\n", idToClientInfo.Values.Select(x => x.name));
                             SendToClients(listOfClients, idToClientInfo[clientId]);
                             break;
+                        //case MessageType.Roll:
+                        //    RollDiceMessage rolledRequest = MessagePackSerializer.Deserialize<RollDiceMessage>(payLoadAsBytes);
+                        //    //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
+                        //    //Console.WriteLine(chatMsgWithName);
+                        //    if (Int32.Parse(rolledRequest.rollRequest) <= 6 && Int32.Parse(rolledRequest.rollRequest) >= 1)
+                        //    {
+                        //        MovePieceForClients(Int32.Parse(rolledRequest.rollRequest), idToClientInfo.Values.ToArray());
+                        //    }
+
+                        //    break;
                         case MessageType.Roll:
                             RollMessage rollMsg = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
                             roll = GameWorld.Instance.CheckState(roll);
