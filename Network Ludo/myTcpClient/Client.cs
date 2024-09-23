@@ -25,8 +25,8 @@ namespace myTcpClient
             ClientGameWorld.Instance.myClientsList.Add(client);
             myTestInt = 5;
             test = true;
-            ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
-
+            //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
+            ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
         }
 
         public void RunOnce()
