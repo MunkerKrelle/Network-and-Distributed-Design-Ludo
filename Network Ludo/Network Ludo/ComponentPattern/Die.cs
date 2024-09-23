@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Network_Ludo;
 using System;
 
 namespace ComponentPattern
@@ -32,11 +33,12 @@ namespace ComponentPattern
         {
 
             animator.PlayAnimation("RollDie");
-            Roll = rnd.Next(1, 7);
+            //Roll = rnd.Next(1, 7);
 
             if (Roll == 1)
             {
                 animator.PlayAnimation("Idle1");
+                
                 return Roll;
             }
             else if (Roll == 2)

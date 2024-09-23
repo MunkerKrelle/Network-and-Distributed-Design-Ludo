@@ -44,6 +44,18 @@ namespace Network_Ludo
             }
         }
 
+        void MovePieceForClients(int message, params ClientInfo[] clients)
+        {
+            byte[] data = MessagePackSerializer.Serialize(message.ToString());
+            foreach (ClientInfo client in clients)
+            {
+                //Send the length of the message as 4 - byte integer
+                client.writer.Write(data.Length);
+                client.writer.Write(data);
+                client.writer.Flush();
+            }
+        }
+
         public void HandleClient(TcpClient client)
     {
         Guid clientId = Guid.NewGuid();
@@ -56,7 +68,8 @@ namespace Network_Ludo
                 while (client.Connected)
                 {
                     int messageLength = reader.ReadInt32();
-
+                    Random myRandom = new Random();
+                    int roll = 0;
                     byte messageType = reader.ReadByte();
                     MessageType recievedType = (MessageType)messageType;
 
@@ -81,6 +94,25 @@ namespace Network_Ludo
                             string listOfClients = string.Join("\n", idToClientInfo.Values.Select(x => x.name));
                             SendToClients(listOfClients, idToClientInfo[clientId]);
                             break;
+                        case MessageType.Roll:
+                            roll = myRandom.Next(1,7);
+                            RollMessage rolledRequest = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
+                            //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
+                            //Console.WriteLine(chatMsgWithName);
+                            //if (Int32.Parse(rolledRequest.roll) <= 6 && Int32.Parse(rolledRequest.roll) >= 1)
+                            //{
+                            //string rollMsg = ($"Bob has rolled {roll} and moves {roll} spaces");
+                            ////SendToClients(rollMsg, idToClientInfo.Values.ToArray());
+                            MovePieceForClients(roll, idToClientInfo.Values.ToArray());
+                            GameWorld.Instance.CheckState(roll);
+                            //}
+
+                            break;
+                        //case MessageType.Roll:
+                        //    RollMessage rollMsg = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
+                        //    roll = GameWorld.Instance.CheckState(roll);
+
+                        //    break;
                         default:
                             break;
                     }

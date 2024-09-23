@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Network_Ludo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,12 @@ namespace myTcpClient
         private Client client = new Client();
         public List<TcpClient> myClientsList = new List<TcpClient>();
         private string _stringValue = string.Empty;
+
+        public static bool isPressed;
+        public KeyboardState keyState;
+        public KeyboardState previousKeyState;
+        public string inputText = string.Empty;
+        public string currentInputText = string.Empty;
 
 
         public ClientGameWorld()
@@ -59,15 +66,27 @@ namespace myTcpClient
                 Exit();
 
             KeyboardState keyState = Keyboard.GetState();
+
+            if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+            {
+                client.isChatting = true;
+            }
+
+            if (client.isChatting == true) 
+            {
+                EnterMessage(keyState);
+            }
+
+            
             if (keyState.IsKeyDown(Keys.B))
             {
-                Console.WriteLine("key was pressed");
+                //GameWorld.Instance.CheckState(4);
+                //InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
+                int myDiceRoll = 5;
+                string myDiceRollString = myDiceRoll.ToString();
+                client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
+
             }
-            if (keyState.IsKeyDown(Keys.Enter))
-            {
-                client.isChatting = !client.isChatting;
-            }
-            EnterMessage(keyState);
 
             //client.MyMessages("i am so awesome");
             base.Update(gameTime);
@@ -75,31 +94,43 @@ namespace myTcpClient
 
         public void EnterMessage(KeyboardState keyState) 
         {
-            if (client.isChatting == true) 
-            {
-                var keys = keyState.GetPressedKeys();
+            keyState = Keyboard.GetState();
 
-                if (keys.Length > 0)
+            if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
+            {
+                if (inputText.Length > 0)
+                    inputText = inputText[..^1]; // Remove last character
+            }
+
+            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            {
+                if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
                 {
-                    var keyValue = keys[0].ToString();
-                    if (keyValue != "Enter")
+                    // Check if the key is a character key
+                    if (key >= Keys.A && key <= Keys.Z)
                     {
-                        client.letters += keyValue; //needs a cooldown
+                        inputText += key.ToString();
+                    }
+                    else if (key >= Keys.D0 && key <= Keys.D9)
+                    {
+                        inputText += (key - Keys.D0).ToString();
+                    }
+                    else if (key == Keys.Enter)
+                    {
+                        client.letters = inputText;
+                        client.SendMessage(client.writer, new ChatMessage { message = client.letters});
                     }
                 }
-                //if (keyState.IsKeyDown(Keys.Home))
-                //{
-                //    client.isChatting = false;
-                //}
             }
-            
+            previousKeyState = keyState;
+
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            
 
             base.Draw(gameTime);
         }

@@ -44,6 +44,10 @@ namespace Network_Ludo
         GameObject piece3;
         GameObject piece4;
 
+        private Vector2 piece1StartPos = new Vector2(50, 50);
+        private Vector2 piece2StartPos = new Vector2(50, 150);
+        private Vector2 piece3StartPos = new Vector2(50, 250);
+        private Vector2 piece4StartPos = new Vector2(50, 350);
 
         public List<Player> playerList = new List<Player>();
 
@@ -93,8 +97,6 @@ namespace Network_Ludo
             IsMouseVisible = true;
         }
 
-        public Dictionary<string, Texture2D> sprites { get; private set; } = new Dictionary<string, Texture2D>();
-
         protected override void Initialize()
         {
             Thread ini = new Thread(Server.Instance.server.Start);
@@ -108,7 +110,7 @@ namespace Network_Ludo
             _graphics.ApplyChanges();
 
             CreateColorBox();
-            
+
             Director director = new Director(new DieBuilder());
             GameObject dieGo = director.Construct();
             Die die = dieGo.GetComponent<Die>() as Die;
@@ -141,7 +143,7 @@ namespace Network_Ludo
             {
                 go.Awake();
             }
-            
+
             base.Initialize();
         }
 
@@ -192,7 +194,7 @@ namespace Network_Ludo
             Cleanup();
         }
 
-        private void WhileLoopThread() 
+        private void WhileLoopThread()
         {
             Thread.Sleep(1000);
             while (true)
@@ -201,14 +203,14 @@ namespace Network_Ludo
                 Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
                 clientThread.IsBackground = true;
                 clientThread.Start();
-            }   
+            }
         }
 
-        private void ThreadForWaitingForClient() 
-        { 
-            Thread test = new Thread(WhileLoopThread);
-            test.IsBackground = true;
-            test.Start();
+        private void ThreadForWaitingForClient()
+        {
+            Thread WaitForClient = new Thread(WhileLoopThread);
+            WaitForClient.IsBackground = true;
+            WaitForClient.Start();
         }
 
         private void Cleanup()
@@ -359,23 +361,32 @@ namespace Network_Ludo
             switch (TurnOrder)
             {
                 case GameState.Player1:
-                    //MOVE
+                    piece1.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player2;
                     break;
                 case GameState.Player2:
-                    //MOVE
+                    piece2.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player3;
                     break;
                 case GameState.Player3:
-                    //MOVE
+                    piece3.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player4;
                     break;
                 case GameState.Player4:
-                    //MOVE
+                    piece4.Transform.Position += new Vector2((100 * roll), 0);
                     TurnOrder = GameState.Player1;
                     break;
                 default:
-                    break;       
+                    break;
+            }
+
+            if (piece1.Transform.Position.X > 1300 || piece2.Transform.Position.X > 1300 || piece3.Transform.Position.X > 1300 || piece4.Transform.Position.X > 1300)
+            {
+                piece1.Transform.Position = piece1StartPos;
+                piece2.Transform.Position = piece2StartPos;
+                piece3.Transform.Position = piece3StartPos;
+                piece4.Transform.Position = piece4StartPos;
+                TurnOrder = GameState.Player1;
             }
         }
     }
