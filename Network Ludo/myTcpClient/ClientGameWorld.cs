@@ -16,6 +16,8 @@ namespace myTcpClient
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        public static SpriteFont font;
+
         private static ClientGameWorld instance;
         public static ClientGameWorld Instance
         {
@@ -48,6 +50,10 @@ namespace myTcpClient
 
         protected override void Initialize()
         {
+            _graphics.PreferredBackBufferWidth = 11 * 100 + 150;  // set this value to the desired width of your window
+            _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
+            _graphics.ApplyChanges();
+
             client.GetMeGoing();
             client.RunOnce();
            
@@ -57,6 +63,8 @@ namespace myTcpClient
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            font = Content.Load<SpriteFont>("textType");
 
             // TODO: use this.Content to load your game content here
         }
@@ -93,7 +101,7 @@ namespace myTcpClient
             base.Update(gameTime);
         }
 
-        public void EnterMessage(KeyboardState keyState) 
+        public void EnterMessage(KeyboardState keyState)
         {
             keyState = Keyboard.GetState();
 
@@ -119,18 +127,30 @@ namespace myTcpClient
                     else if (key == Keys.Enter)
                     {
                         client.letters = inputText;
-                        client.SendMessage(client.writer, new ChatMessage { message = client.letters});
+                        client.SendMessage(client.writer, new ChatMessage { message = client.letters });
                     }
                 }
             }
             previousKeyState = keyState;
 
+
+        }
+        private Vector2 Origin(string input)
+        {
+            Vector2 fontLength = GameWorld.font.MeasureString(input);
+
+            Vector2 originText = new Vector2(fontLength.X / 2f, fontLength.Y / 2f);
+            return originText;
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            foreach (ClientInfo chat in Server.Instance.idToClientInfo.Values)
+            {
+                _spriteBatch.DrawString(font,inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
+            }
 
             base.Draw(gameTime);
         }
