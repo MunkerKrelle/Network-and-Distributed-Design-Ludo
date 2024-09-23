@@ -37,6 +37,8 @@ namespace Network_Ludo
         public static GameState TurnOrder;
         private int turn;
 
+        Dictionary<string, ClientInfo> idToClienttext = new Dictionary<string, ClientInfo>();
+
         private static List<Button> buttons = new List<Button>();
 
         GameObject piece1;
@@ -259,7 +261,10 @@ namespace Network_Ludo
             {
                 _spriteBatch.DrawString(font, playerList[i].playerName, corners[i], playerList[i].color, 0, Origin(playerList[i].playerName), 1, SpriteEffects.None, 1f);
             }
-
+            foreach (ClientInfo player in Server.Instance.idToClientInfo.Values)
+            {
+                _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);

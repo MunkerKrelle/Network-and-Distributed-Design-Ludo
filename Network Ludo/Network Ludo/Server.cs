@@ -26,7 +26,7 @@ namespace Network_Ludo
             }
         }
 
-        Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        public Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
         //server.Start();
