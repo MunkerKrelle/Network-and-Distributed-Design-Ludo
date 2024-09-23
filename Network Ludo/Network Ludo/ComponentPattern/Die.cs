@@ -33,7 +33,7 @@ namespace ComponentPattern
         {
 
             animator.PlayAnimation("RollDie");
-            Roll = rnd.Next(1, 7);
+            //Roll = rnd.Next(1, 7);
 
             if (Roll == 1)
             {
