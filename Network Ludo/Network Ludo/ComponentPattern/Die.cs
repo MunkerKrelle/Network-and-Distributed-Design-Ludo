@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Network_Ludo;
+using myClientTCP;
 using System;
 
 namespace ComponentPattern

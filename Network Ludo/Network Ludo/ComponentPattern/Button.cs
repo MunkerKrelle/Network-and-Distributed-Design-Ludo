@@ -1,4 +1,4 @@
-﻿using Network_Ludo;
+﻿using myClientTCP;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -68,7 +68,7 @@ namespace ComponentPattern
         /// </summary>
         public void MouseOnButton()
         {
-            if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y)
+            if (ClientGameWorld.mouseState.X > minPosition.X && ClientGameWorld.mouseState.Y > minPosition.Y && ClientGameWorld.mouseState.X < maxPosition.X && ClientGameWorld.mouseState.Y < maxPosition.Y)
             {
                 GameObject.Transform.Color = Color.LightGray;
             }
@@ -83,9 +83,9 @@ namespace ComponentPattern
         /// </summary>
         public void MousePressed()
         {
-            if (GameWorld.isPressed == true)
+            if (ClientGameWorld.isPressed == true)
             {
-                if (GameWorld.mouseState.X > minPosition.X && GameWorld.mouseState.Y > minPosition.Y && GameWorld.mouseState.X < maxPosition.X && GameWorld.mouseState.Y < maxPosition.Y)
+                if (ClientGameWorld.mouseState.X > minPosition.X && ClientGameWorld.mouseState.Y > minPosition.Y && ClientGameWorld.mouseState.X < maxPosition.X && ClientGameWorld.mouseState.Y < maxPosition.Y)
                 {
                     GameObject.Transform.Color = Color.Yellow;
                     buttonAction.Invoke();
@@ -97,14 +97,14 @@ namespace ComponentPattern
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 fontLength = GameWorld.font.MeasureString(buttonText);
+            Vector2 fontLength = ClientGameWorld.font.MeasureString(buttonText);
 
             originText = new Vector2(fontLength.X / 2f, fontLength.Y / 2f);
 
-            spriteBatch.DrawString(GameWorld.font, buttonText, buttonPosition, Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
+            spriteBatch.DrawString(ClientGameWorld.font, buttonText, buttonPosition, Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
 
-            spriteBatch.DrawString(GameWorld.font, $"{minPosition}", new Vector2(buttonPosition.X * 2, buttonPosition.Y + 100), Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
-            spriteBatch.DrawString(GameWorld.font, $"{maxPosition}", new Vector2(buttonPosition.X * 2, buttonPosition.Y + 120), Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
+            spriteBatch.DrawString(ClientGameWorld.font, $"{minPosition}", new Vector2(buttonPosition.X * 2, buttonPosition.Y + 100), Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
+            spriteBatch.DrawString(ClientGameWorld.font, $"{maxPosition}", new Vector2(buttonPosition.X * 2, buttonPosition.Y + 120), Color.Black, 0, originText, 1, SpriteEffects.None, 1f);
 
         }
 

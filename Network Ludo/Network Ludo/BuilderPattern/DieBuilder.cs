@@ -1,6 +1,6 @@
 ﻿using ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
-using Network_Ludo;
+using myClientTCP;
 
 namespace BuilderPattern
 {
@@ -43,7 +43,7 @@ namespace BuilderPattern
 
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = GameWorld.Instance.Content.Load<Texture2D>(spriteNames[i]);
+                sprites[i] = ClientGameWorld.Instance.Content.Load<Texture2D>(spriteNames[i]);
             }
 
             Animation animation = new Animation(animationName, sprites, 5);

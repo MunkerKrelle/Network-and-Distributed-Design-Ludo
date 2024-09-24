@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Network_Ludo
+namespace myClientTCP
 {
     public class ClientInfo
     {

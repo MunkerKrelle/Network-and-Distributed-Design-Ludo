@@ -1,3 +1,3 @@
 ﻿
-using var game = new myTcpClient.ClientGameWorld();
+using var game = new Ludo_Server.Ludo_Server();
 game.Run();

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MessagePack;
 
-namespace Network_Ludo
+namespace myClientTCP
 {
     public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 }
     [MessagePackObject]

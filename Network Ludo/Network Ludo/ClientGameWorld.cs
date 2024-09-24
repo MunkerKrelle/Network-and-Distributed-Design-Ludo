@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Network_Ludo
+namespace myClientTCP
 {
     public enum GameState
     {
@@ -20,11 +20,21 @@ namespace Network_Ludo
         Player4
     }
 
-    public class GameWorld : Game
+    public class ClientGameWorld : Game
     {
         private GraphicsDeviceManager _graphics;
 
         private SpriteBatch _spriteBatch;
+
+        private Client client = new Client();
+        public List<TcpClient> myClientsList = new List<TcpClient>();
+        private string _stringValue = string.Empty;
+
+        public static bool isPressed;
+        public KeyboardState keyState;
+        public KeyboardState previousKeyState;
+        public string inputText = string.Empty;
+        public string currentInputText = string.Empty;
 
         private List<GameObject> gameObjects = new List<GameObject>();
 
@@ -53,11 +63,7 @@ namespace Network_Ludo
 
         public static MouseState mouseState;
         public static MouseState newState;
-        public static bool isPressed;
-        public KeyboardState keyState;
-        public KeyboardState previousKeyState;
-        public string inputText = string.Empty;
-        public string currentInputText = string.Empty;
+    
 
         Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
 
@@ -76,39 +82,34 @@ namespace Network_Ludo
                 return gameObjects;
             }
         }
-        private static GameWorld instance;
+        private static ClientGameWorld instance;
 
-        public static GameWorld Instance
+        public static ClientGameWorld Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new GameWorld();
+                    instance = new ClientGameWorld();
                 }
                 return instance;
             }
         }
 
-        public GameWorld()
+        public ClientGameWorld()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-
-        protected override void Initialize()
+        protected override void Initialize() //originally from old client
         {
-            Thread ini = new Thread(Server.Instance.server.Start);
-            ini.IsBackground = true;
-            ini.Start();
-
-            ThreadForWaitingForClient();
+            client.GetMeGoing();
+            client.RunOnce();
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
-
             CreateColorBox();
 
             Director director = new Director(new DieBuilder());
@@ -144,8 +145,10 @@ namespace Network_Ludo
                 go.Awake();
             }
 
+
             base.Initialize();
         }
+        
 
         protected override void LoadContent()
         {
@@ -160,57 +163,76 @@ namespace Network_Ludo
 
             //CreateColorBox();
         }
-
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            timeElapsed += DeltaTime;
-            mouseState = Mouse.GetState();
+            KeyboardState keyState = Keyboard.GetState();
+
+            if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+            {
+                client.isChatting = true;
+            }
+
+            if (client.isChatting == true)
+            {
+                EnterMessage(keyState);
+            }
+
+
+            if (keyState.IsKeyDown(Keys.B))
+            {
+                //GameWorld.Instance.CheckState(4);
+                //InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
+                int myDiceRoll = 5;
+                string myDiceRollString = myDiceRoll.ToString();
+                client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
+
+            }
+
             WriteText();
-
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                isPressed = true;
-            }
-            else
-            {
-                isPressed = false;
-            }
-
-            if (timeElapsed >= .3f)
-            {
-                InputHandler.Instance.Execute();
-                timeElapsed = 0;
-            }
-
+            //client.MyMessages("i am so awesome");
             foreach (GameObject go in gameObjects)
             {
                 go.Update(gameTime);
             }
-
+            base.Update(gameTime);
             Cleanup();
         }
 
-        private void WhileLoopThread()
+        public void EnterMessage(KeyboardState keyState) //originally from Client
         {
-            Thread.Sleep(1000);
-            while (true)
-            {
-                TcpClient client = Server.Instance.server.AcceptTcpClient();
-                Thread clientThread = new Thread(() => Server.Instance.HandleClient(client));
-                clientThread.IsBackground = true;
-                clientThread.Start();
-            }
-        }
+            keyState = Keyboard.GetState();
 
-        private void ThreadForWaitingForClient()
-        {
-            Thread WaitForClient = new Thread(WhileLoopThread);
-            WaitForClient.IsBackground = true;
-            WaitForClient.Start();
+            if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
+            {
+                if (inputText.Length > 0)
+                    inputText = inputText[..^1]; // Remove last character
+            }
+
+            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            {
+                if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
+                {
+                    // Check if the key is a character key
+                    if (key >= Keys.A && key <= Keys.Z)
+                    {
+                        inputText += key.ToString();
+                    }
+                    else if (key >= Keys.D0 && key <= Keys.D9)
+                    {
+                        inputText += (key - Keys.D0).ToString();
+                    }
+                    else if (key == Keys.Enter)
+                    {
+                        client.letters = inputText;
+                        client.SendMessage(client.writer, new ChatMessage { message = client.letters });
+                    }
+                }
+            }
+            previousKeyState = keyState;
+
         }
 
         private void Cleanup()
@@ -267,41 +289,41 @@ namespace Network_Ludo
 
         public void WriteText()
         {
-            keyState = Keyboard.GetState();
+            //keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
-            {
-                if (inputText.Length > 0)
-                    inputText = inputText[..^1]; // Remove last character
-            }
+            //if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
+            //{
+            //    if (inputText.Length > 0)
+            //        inputText = inputText[..^1]; // Remove last character
+            //}
 
-            foreach (Keys key in Enum.GetValues(typeof(Keys)))
-            {
-                if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
-                {
-                    // Check if the key is a character key
-                    if (key >= Keys.A && key <= Keys.Z)
-                    {
-                        inputText += key.ToString();
-                    }
-                    else if (key >= Keys.D0 && key <= Keys.D9)
-                    {
-                        inputText += (key - Keys.D0).ToString();
-                    }
-                    else if (key == Keys.Enter)
-                    {
-                        currentInputText = inputText;
-                        ShowColorBoxes();
-                    }
+            //foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            //{
+            //    if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
+            //    {
+            //        // Check if the key is a character key
+            //        if (key >= Keys.A && key <= Keys.Z)
+            //        {
+            //            inputText += key.ToString();
+            //        }
+            //        else if (key >= Keys.D0 && key <= Keys.D9)
+            //        {
+            //            inputText += (key - Keys.D0).ToString();
+            //        }
+            //        else if (key == Keys.Enter)
+            //        {
+            //            currentInputText = inputText;
+            //            ShowColorBoxes();
+            //        }
 
-                }
-            }
-            previousKeyState = keyState;
+            //    }
+            //}
+            //previousKeyState = keyState;
         }
 
         private Vector2 Origin(string input)
         {
-            Vector2 fontLength = GameWorld.font.MeasureString(input);
+            Vector2 fontLength = ClientGameWorld.font.MeasureString(input);
 
             Vector2 originText = new Vector2(fontLength.X / 2f, fontLength.Y / 2f);
             return originText;

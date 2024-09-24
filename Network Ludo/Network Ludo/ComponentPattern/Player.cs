@@ -1,4 +1,4 @@
-﻿using Network_Ludo;
+﻿using myClientTCP;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FactoryPattern;
@@ -37,7 +37,7 @@ namespace ComponentPattern
             {
                 ludoPieces.Add(LudoPieceFactory.Instance.Create(color, playerName));
                 ludoPieces[i].Transform.Position = new Vector2(pos.X - 100 + 70 * i, pos.Y + 50);
-                GameWorld.Instance.Instantiate(ludoPieces[i]);
+                ClientGameWorld.Instance.Instantiate(ludoPieces[i]);
 
             }
         }

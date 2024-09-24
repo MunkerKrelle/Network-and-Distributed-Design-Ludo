@@ -1,4 +1,4 @@
-﻿using Network_Ludo;
+﻿using myClientTCP;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace ComponentPattern
 
         public override void Update(GameTime gameTime) //Update
         {
-            timeElapsed += GameWorld.Instance.DeltaTime;
+            timeElapsed += ClientGameWorld.Instance.DeltaTime;
 
             CurrentIndex = (int)(timeElapsed * currentAnimation.FPS);
 

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading;
 using MessagePack;
 
-namespace Network_Ludo
+namespace myClientTCP
 {
     public class Server
     {
@@ -104,7 +104,7 @@ namespace Network_Ludo
                             //string rollMsg = ($"Bob has rolled {roll} and moves {roll} spaces");
                             ////SendToClients(rollMsg, idToClientInfo.Values.ToArray());
                             MovePieceForClients(roll, idToClientInfo.Values.ToArray());
-                            GameWorld.Instance.CheckState(roll);
+                            ClientGameWorld.Instance.CheckState(roll);
                             //}
 
                             break;

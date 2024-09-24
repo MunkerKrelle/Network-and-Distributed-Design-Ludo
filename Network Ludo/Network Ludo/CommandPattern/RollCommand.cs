@@ -1,5 +1,5 @@
 ﻿using ComponentPattern;
-using Network_Ludo;
+using myClientTCP;
 
 namespace CommandPattern
 {
@@ -13,7 +13,7 @@ namespace CommandPattern
         }
         public void Execute()
         {
-            GameWorld.Instance.CheckState(die.RollDie());
+            ClientGameWorld.Instance.CheckState(die.RollDie());
         }
 
         public void Undo()

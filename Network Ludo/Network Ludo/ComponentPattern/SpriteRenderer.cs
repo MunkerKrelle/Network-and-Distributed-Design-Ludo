@@ -1,4 +1,4 @@
-﻿using Network_Ludo;
+﻿using myClientTCP;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,7 +24,7 @@ namespace ComponentPattern
 
         public void SetSprite(string spriteName)
         {
-            Sprite = GameWorld.Instance.Content.Load<Texture2D>(spriteName);
+            Sprite = ClientGameWorld.Instance.Content.Load<Texture2D>(spriteName);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

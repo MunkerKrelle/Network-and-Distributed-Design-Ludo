@@ -1,14 +1,14 @@
-﻿using Network_Ludo;
+﻿using myClientTCP;
 using System;
 
-namespace Network_Ludo
+namespace myClientTCP
 {
     public static class Program
     {
         [STAThread]
         static void Main()
         {
-            GameWorld.Instance.Run();
+            ClientGameWorld.Instance.Run();
         }
     }
 }
