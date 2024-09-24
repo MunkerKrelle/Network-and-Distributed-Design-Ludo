@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using MessagePack;
+using ComponentPattern;
 
 namespace Network_Ludo
 {
@@ -26,7 +27,9 @@ namespace Network_Ludo
             }
         }
 
-        public Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        public int roll = 0;
+
+        Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
         //server.Start();
@@ -69,7 +72,6 @@ namespace Network_Ludo
                 {
                     int messageLength = reader.ReadInt32();
                     Random myRandom = new Random();
-                    int roll = 0;
                     byte messageType = reader.ReadByte();
                     MessageType recievedType = (MessageType)messageType;
 
