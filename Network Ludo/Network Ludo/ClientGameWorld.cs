@@ -28,7 +28,6 @@ namespace myClientTCP
         private SpriteBatch _spriteBatch;
 
         private Client client = new Client();
-        public List<TcpClient> myClientsList = new List<TcpClient>();
         private string _stringValue = string.Empty;
 
         public static bool isPressed;
@@ -103,7 +102,7 @@ namespace myClientTCP
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-        protected override void Initialize() //originally from old client
+        protected override void Initialize()
         {
             client.GetMeGoing();
             client.RunOnce();
@@ -184,14 +183,11 @@ namespace myClientTCP
 
             if (keyState.IsKeyDown(Keys.B))
             {
-                //GameWorld.Instance.CheckState(4);
-                //InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
                 int myDiceRoll = 5;
                 string myDiceRollString = myDiceRoll.ToString();
                 client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
             }
 
-            //client.MyMessages("i am so awesome");
             foreach (GameObject go in gameObjects)
             {
                 go.Update(gameTime);
@@ -200,7 +196,7 @@ namespace myClientTCP
             Cleanup();
         }
 
-        public void EnterMessage(KeyboardState keyState) //originally from Client
+        public void EnterMessage(KeyboardState keyState)
         {
             keyState = Keyboard.GetState();
 

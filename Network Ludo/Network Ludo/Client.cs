@@ -20,16 +20,18 @@ namespace myClientTCP
         public BinaryWriter writer;
         //Console.WriteLine("Connected to server...");
         public bool isChatting = false;
-        private object locker = new object();
+        //private object locker = new object();
         public string letters;
+
         public void GetMeGoing()
         {
-            ClientGameWorld.Instance.myClientsList.Add(client);
+            //ClientGameWorld.Instance.myClientsList.Add(client);
             myTestInt = 5;
             test = true;
             //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
-            ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000); 
+            //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
+            client.Connect("192.168.87.116", 12000);
         }
 
         public void RunOnce()
