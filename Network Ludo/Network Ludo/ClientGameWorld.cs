@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using Ludo_Server;
 
 namespace myClientTCP
 {
@@ -179,7 +180,7 @@ namespace myClientTCP
             {
                 EnterMessage(keyState);
             }
-
+            //WriteText();
 
             if (keyState.IsKeyDown(Keys.B))
             {
@@ -191,7 +192,7 @@ namespace myClientTCP
 
             }
 
-            WriteText();
+           
             //client.MyMessages("i am so awesome");
             foreach (GameObject go in gameObjects)
             {
@@ -315,7 +316,6 @@ namespace myClientTCP
                         currentInputText = inputText;
                         ShowColorBoxes();
                     }
-
                 }
             }
             previousKeyState = keyState;

@@ -1,8 +1,8 @@
-﻿using ComponentPattern;
+﻿//using ComponentPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using myClientTCP;
+//using myClientTCP;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

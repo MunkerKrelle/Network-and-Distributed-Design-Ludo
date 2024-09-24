@@ -4,7 +4,8 @@ using System.Net.Sockets;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using MessagePack;
-using myClientTCP;
+using Ludo_Server;
+
 
 
 namespace myClientTCP

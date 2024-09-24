@@ -4,11 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "myClientTCP", "Network Ludo\myClientTCP.csproj", "{A7B39E7C-E300-4F6E-B8B4-A21CB9E4B385}"
+	ProjectSection(ProjectDependencies) = postProject
+		{025A1317-9809-4ECB-AEB4-704A404E5E6A} = {025A1317-9809-4ECB-AEB4-704A404E5E6A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LudoServer", "myTcpClient\LudoServer.csproj", "{025A1317-9809-4ECB-AEB4-704A404E5E6A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A7B39E7C-E300-4F6E-B8B4-A21CB9E4B385} = {A7B39E7C-E300-4F6E-B8B4-A21CB9E4B385}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

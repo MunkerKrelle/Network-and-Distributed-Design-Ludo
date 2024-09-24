@@ -8,7 +8,6 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using MessagePack;
-using myClientTCP;
 
 namespace Ludo_Server
 {
@@ -105,7 +104,8 @@ namespace Ludo_Server
                             //string rollMsg = ($"Bob has rolled {roll} and moves {roll} spaces");
                             ////SendToClients(rollMsg, idToClientInfo.Values.ToArray());
                             MovePieceForClients(roll, idToClientInfo.Values.ToArray());
-                            ClientGameWorld.Instance.CheckState(roll);
+                            //ClientGameWorld.Instance.CheckState(roll);
+                            client.
                             
                             //}
 
