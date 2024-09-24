@@ -189,10 +189,8 @@ namespace myClientTCP
                 int myDiceRoll = 5;
                 string myDiceRollString = myDiceRoll.ToString();
                 client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
-
             }
 
-           
             //client.MyMessages("i am so awesome");
             foreach (GameObject go in gameObjects)
             {

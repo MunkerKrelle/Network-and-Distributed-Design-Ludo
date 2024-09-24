@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using MessagePack;
 using Ludo_Server;
+using System.Linq;
 
 
 
@@ -82,6 +83,16 @@ namespace myClientTCP
                 int messageLength = reader.ReadInt32();
                 byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
                 string message = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
+                if (message == "CodeRoll1" || message == "CodeRoll2" || message == "CodeRoll3" || message == "CodeRoll4" || message == "CodeRoll5" || message == "CodeRoll6")
+                {
+                    message = message.Remove(0, 8);
+                    if (Int32.Parse(message) >= 1 && Int32.Parse(message) <= 6)
+                    {
+                        int returnedRoll = Int32.Parse(message);
+                        ClientGameWorld.Instance.CheckState(returnedRoll);
+                    }
+                }
+
             }
             if (client.Connected == false)
             {
@@ -121,5 +132,6 @@ namespace myClientTCP
 
             writer.Flush();
         }
+
     }
 }

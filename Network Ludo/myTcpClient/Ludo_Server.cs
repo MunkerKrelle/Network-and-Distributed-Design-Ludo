@@ -66,25 +66,7 @@ namespace Ludo_Server
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
-            //mouseState = Mouse.GetState();
             
-
-            //if (mouseState.LeftButton == ButtonState.Pressed)
-            //{
-            //    isPressed = true;
-            //}
-            //else
-            //{
-            //    isPressed = false;
-            //}
-
-            //if (timeElapsed >= .3f)
-            //{
-            //    InputHandler.Instance.Execute();
-            //    timeElapsed = 0;
-            //}
-
-           
         }
 
         protected override void Draw(GameTime gameTime)

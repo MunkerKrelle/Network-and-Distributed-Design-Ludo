@@ -101,12 +101,13 @@ namespace Ludo_Server
                             //Console.WriteLine(chatMsgWithName);
                             //if (Int32.Parse(rolledRequest.roll) <= 6 && Int32.Parse(rolledRequest.roll) >= 1)
                             //{
-                            //string rollMsg = ($"Bob has rolled {roll} and moves {roll} spaces");
-                            ////SendToClients(rollMsg, idToClientInfo.Values.ToArray());
-                            MovePieceForClients(roll, idToClientInfo.Values.ToArray());
+                            string rollMsg = ($"CodeRoll{roll}");
+                            SendToClients(rollMsg, idToClientInfo.Values.ToArray());
+                            //MovePieceForClients(roll, idToClientInfo.Values.ToArray());
                             //ClientGameWorld.Instance.CheckState(roll);
-                            client.
-                            
+
+
+
                             //}
 
                             break;
