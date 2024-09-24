@@ -289,36 +289,36 @@ namespace myClientTCP
 
         public void WriteText()
         {
-            //keyState = Keyboard.GetState();
+            keyState = Keyboard.GetState();
 
-            //if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
-            //{
-            //    if (inputText.Length > 0)
-            //        inputText = inputText[..^1]; // Remove last character
-            //}
+            if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
+            {
+                if (inputText.Length > 0)
+                    inputText = inputText[..^1]; // Remove last character
+            }
 
-            //foreach (Keys key in Enum.GetValues(typeof(Keys)))
-            //{
-            //    if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
-            //    {
-            //        // Check if the key is a character key
-            //        if (key >= Keys.A && key <= Keys.Z)
-            //        {
-            //            inputText += key.ToString();
-            //        }
-            //        else if (key >= Keys.D0 && key <= Keys.D9)
-            //        {
-            //            inputText += (key - Keys.D0).ToString();
-            //        }
-            //        else if (key == Keys.Enter)
-            //        {
-            //            currentInputText = inputText;
-            //            ShowColorBoxes();
-            //        }
+            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            {
+                if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
+                {
+                    // Check if the key is a character key
+                    if (key >= Keys.A && key <= Keys.Z)
+                    {
+                        inputText += key.ToString();
+                    }
+                    else if (key >= Keys.D0 && key <= Keys.D9)
+                    {
+                        inputText += (key - Keys.D0).ToString();
+                    }
+                    else if (key == Keys.Enter)
+                    {
+                        currentInputText = inputText;
+                        ShowColorBoxes();
+                    }
 
-            //    }
-            //}
-            //previousKeyState = keyState;
+                }
+            }
+            previousKeyState = keyState;
         }
 
         private Vector2 Origin(string input)
