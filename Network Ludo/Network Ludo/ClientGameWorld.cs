@@ -13,6 +13,9 @@ using Ludo_Server;
 
 namespace myClientTCP
 {
+    /// <summary>
+    /// An enum used to switch turns between players
+    /// </summary>
     public enum GameState
     {
         Player1,
@@ -102,6 +105,10 @@ namespace myClientTCP
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
+
+        /// <summary>
+        /// Initializing the screen size as well as the game components
+        /// </summary>
         protected override void Initialize()
         {
             client.GetMeGoing();
@@ -112,6 +119,7 @@ namespace myClientTCP
             _graphics.ApplyChanges();
             CreateColorBox();
 
+            //Bulding the die, which was later removed. Only staying here if we want to return to the project later on. The same with the command underneath
             Director director = new Director(new DieBuilder());
             GameObject dieGo = director.Construct();
             Die die = dieGo.GetComponent<Die>() as Die;
@@ -149,7 +157,9 @@ namespace myClientTCP
             base.Initialize();
         }
         
-
+        /// <summary>
+        /// Loading the game content
+        /// </summary>
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -160,9 +170,12 @@ namespace myClientTCP
             }
 
             font = Content.Load<SpriteFont>("textType");
-
-            //CreateColorBox();
         }
+
+        /// <summary>
+        /// Updating the game 60 times a second constantly checking for inputs and changes to the state of the game
+        /// </summary>
+        /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -230,6 +243,9 @@ namespace myClientTCP
 
         }
 
+        /// <summary>
+        /// Removes objects no longer used in the game. In this case the color boxes used to choose a color
+        /// </summary>
         private void Cleanup()
         {
             // Adding newly instantiated GameObjects
@@ -347,6 +363,9 @@ namespace myClientTCP
             }
         }
 
+        /// <summary>
+        /// Method showing the boxes used to choose a color at the beginning of the game
+        /// </summary>
         public void ShowColorBoxes()
         {
             inputText = string.Empty;
@@ -357,6 +376,10 @@ namespace myClientTCP
             }
         }
 
+        /// <summary>
+        /// A method used to insert a player into the game with their a color and name of their choice
+        /// </summary>
+        /// <param name="chosenColor"></param>
         private void JoinLudo(Color chosenColor)
         {
 
@@ -372,6 +395,10 @@ namespace myClientTCP
             playerList.Add(player.GetComponent<Player>() as Player);
         }
 
+        /// <summary>
+        /// A method for switching turns between players as well as updating the pieces to their new position equalling the value of their roll
+        /// </summary>
+        /// <param name="roll"></param>
         public void CheckState(int roll)
         {
             switch (TurnOrder)
@@ -396,6 +423,7 @@ namespace myClientTCP
                     break;
             }
 
+            //If a piece reaches the goal the pieces are reset to their starting position and the turn goes to Player1
             if (piece1.Transform.Position.X > 1300 || piece2.Transform.Position.X > 1300 || piece3.Transform.Position.X > 1300 || piece4.Transform.Position.X > 1300)
             {
                 piece1.Transform.Position = piece1StartPos;

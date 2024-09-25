@@ -4,6 +4,10 @@ using System;
 
 namespace ComponentPattern
 {
+    /// <summary>
+    /// At one point the Die was a part of the game, however, after mergin the game and restructering the code this is no longer the case.
+    /// We didn't have time to implement the die again
+    /// </summary>
     internal class Die : Component
     {
         private Random rnd;
@@ -29,11 +33,17 @@ namespace ComponentPattern
             sr.SetSprite("Side1");
             GameObject.Transform.Layer = 0.9f;
         }
+
+        /// <summary>
+        /// The many if else statements were tempoary. It was changed to a switch case but this was lost in a merge.
+        /// We didn't prioritize changing it back to a switch case, as the die was left out of the final product
+        /// </summary>
+        /// <returns></returns>
         public int RollDie()
         {
 
             animator.PlayAnimation("RollDie");
-            //Roll = rnd.Next(1, 7);
+            
 
             if (Roll == 1)
             {
