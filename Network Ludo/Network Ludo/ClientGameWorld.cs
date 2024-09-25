@@ -200,34 +200,42 @@ namespace myClientTCP
         {
             keyState = Keyboard.GetState();
 
+            // Check for backspace to delete last character
             if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
             {
                 if (inputText.Length > 0)
-                    inputText = inputText[..^1]; // Remove last character
+                    inputText = inputText[..^1]; // Fjern sidste tegn
             }
 
             foreach (Keys key in Enum.GetValues(typeof(Keys)))
             {
                 if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
                 {
-                    // Check if the key is a character key
+                    // Tjek for bogstavstaster
                     if (key >= Keys.A && key <= Keys.Z)
                     {
                         inputText += key.ToString();
                     }
+                    // Tjek for tal
                     else if (key >= Keys.D0 && key <= Keys.D9)
                     {
                         inputText += (key - Keys.D0).ToString();
                     }
+                    // Tjek for mellemrum
+                    else if (key == Keys.Space)
+                    {
+                        inputText += " ";
+                    }
+                    // Når Enter er trykket, send beskeden
                     else if (key == Keys.Enter)
                     {
-                        client.letters = inputText;
-                        client.SendMessage(client.writer, new ChatMessage { message = client.letters });
+                        client.SendMessage(client.writer, new ChatMessage { message = inputText });
+                        inputText = string.Empty;  // Nulstil input efter besked er sendt
                     }
                 }
             }
-            previousKeyState = keyState;
 
+            previousKeyState = keyState;
         }
 
         private void Cleanup()
