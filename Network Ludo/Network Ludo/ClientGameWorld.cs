@@ -63,7 +63,8 @@ namespace myClientTCP
 
         public static MouseState mouseState;
         public static MouseState newState;
-    
+
+        private bool joinGame = false;
 
         Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
 
@@ -148,7 +149,7 @@ namespace myClientTCP
 
             base.Initialize();
         }
-        
+
 
         protected override void LoadContent()
         {
@@ -170,22 +171,32 @@ namespace myClientTCP
 
             KeyboardState keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+            if (joinGame == true)
             {
-                client.isChatting = true;
+                if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+                {
+                    client.isChatting = true;
+                }
+
+                if (client.isChatting == true)
+                {
+                    EnterMessage(keyState);
+                }
+            }
+            else
+            {
+                WriteText(keyState);
             }
 
-            if (client.isChatting == true)
-            {
-                EnterMessage(keyState);
-            }
-            //WriteText();
 
             if (keyState.IsKeyDown(Keys.B))
             {
                 int myDiceRoll = 5;
                 string myDiceRollString = myDiceRoll.ToString();
-                client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
+                client.SendMessage(client.writer, new RollMessage
+                {
+                    roll = myDiceRollString
+                });
             }
 
             foreach (GameObject go in gameObjects)
@@ -267,9 +278,20 @@ namespace myClientTCP
 
             _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
 
-            foreach (GameObject go in gameObjects)
+            if (joinGame == true)
+                foreach (GameObject go in gameObjects)
+                {
+                    go.Draw(_spriteBatch);
+                }
+            else
             {
-                go.Draw(_spriteBatch);
+                foreach (GameObject button in gameObjects)
+                {
+                    if (button.GetComponent<Button>() != null)
+                    {
+                        button.Draw(_spriteBatch);
+                    }
+                }
             }
 
             for (int i = 0; i < playerList.Count; i++)
@@ -282,7 +304,7 @@ namespace myClientTCP
             base.Draw(gameTime);
         }
 
-        public void WriteText()
+        public void WriteText(KeyboardState keyState)
         {
             keyState = Keyboard.GetState();
 
