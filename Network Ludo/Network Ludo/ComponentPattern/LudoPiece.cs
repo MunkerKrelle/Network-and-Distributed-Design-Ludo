@@ -10,11 +10,13 @@ namespace ComponentPattern
 
     public class LudoPiece : Component
     {
-        string name;
+        public string name;
+        public Color color;
 
-        public LudoPiece(GameObject gameObject, string name, LudoState ludoState) : base(gameObject)
+        public LudoPiece(GameObject gameObject, string name, Color color) : base(gameObject)
         {
             this.name = name;
+            this.color = color;
         }
 
         public override void Awake()

@@ -62,11 +62,12 @@ namespace myClientTCP
         private Vector2 piece3StartPos = new Vector2(50, 250);
         private Vector2 piece4StartPos = new Vector2(50, 350);
 
-        public List<Player> playerList = new List<Player>();
+        public List<LudoPiece> playerList = new List<LudoPiece>();
 
         public static MouseState mouseState;
         public static MouseState newState;
-    
+
+        private bool joinGame = false;
 
         Vector2[] corners = new Vector2[] { new Vector2(170, 20), new Vector2(1000, 20), new Vector2(170, 1000), new Vector2(1000, 1000) };
 
@@ -112,7 +113,7 @@ namespace myClientTCP
         protected override void Initialize()
         {
             client.GetMeGoing();
-            client.RunOnce();
+            //client.RunOnce();
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
@@ -133,10 +134,10 @@ namespace myClientTCP
 
             Instantiate(gridObject);
 
-            piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
-            piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
-            piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
-            piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
+            piece1 = LudoPieceFactory.Instance.Create("", Color.Blue);
+            piece2 = LudoPieceFactory.Instance.Create("", Color.Green);
+            piece3 = LudoPieceFactory.Instance.Create("", Color.Red);
+            piece4 = LudoPieceFactory.Instance.Create("", Color.Yellow);
 
             gameObjects.Add(piece1);
             gameObjects.Add(piece2);
@@ -156,10 +157,8 @@ namespace myClientTCP
 
             base.Initialize();
         }
-        
-        /// <summary>
-        /// Loading the game content
-        /// </summary>
+
+
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -183,28 +182,50 @@ namespace myClientTCP
 
             KeyboardState keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+            mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                client.isChatting = true;
+                isPressed = true;
+            }
+            else
+            {
+                isPressed = false;
             }
 
-            if (client.isChatting == true)
+            if (joinGame == true)
             {
-                EnterMessage(keyState);
+                if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+                {
+                    client.isChatting = true;
+                }
+
+                if (client.isChatting == true)
+                {
+                    EnterMessage(keyState);
+                }
             }
-            //WriteText();
+            else
+            {
+                WriteText();
+            }
+
 
             if (keyState.IsKeyDown(Keys.B))
             {
                 int myDiceRoll = 5;
                 string myDiceRollString = myDiceRoll.ToString();
-                client.SendMessage(client.writer, new RollMessage { roll = myDiceRollString });
+                client.SendMessage(client.writer, new RollMessage
+                {
+                    roll = myDiceRollString
+                });
             }
 
             foreach (GameObject go in gameObjects)
             {
                 go.Update(gameTime);
             }
+
             base.Update(gameTime);
             Cleanup();
         }
@@ -283,14 +304,25 @@ namespace myClientTCP
 
             _spriteBatch.DrawString(font, inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
 
-            foreach (GameObject go in gameObjects)
+            if (joinGame == true)
+                foreach (GameObject go in gameObjects)
+                {
+                    go.Draw(_spriteBatch);
+                }
+            else
             {
-                go.Draw(_spriteBatch);
+                foreach (GameObject button in gameObjects)
+                {
+                    if (button.GetComponent<Button>() != null)
+                    {
+                        button.Draw(_spriteBatch);
+                    }
+                }
             }
 
             for (int i = 0; i < playerList.Count; i++)
             {
-                _spriteBatch.DrawString(font, playerList[i].playerName, corners[i], playerList[i].color, 0, Origin(playerList[i].playerName), 1, SpriteEffects.None, 1f);
+                _spriteBatch.DrawString(font, playerList[i].name, new Vector2(playerList[i].GameObject.Transform.Position.X, playerList[i].GameObject.Transform.Position.Y) , playerList[i].color, 0, Origin(playerList[i].name), 1, SpriteEffects.None, 1f);
             }
 
             _spriteBatch.End();
@@ -325,10 +357,12 @@ namespace myClientTCP
                     {
                         currentInputText = inputText;
                         ShowColorBoxes();
+                        client.RunOnce(currentInputText);
                     }
                 }
             }
             previousKeyState = keyState;
+            
         }
 
         private Vector2 Origin(string input)
@@ -347,14 +381,14 @@ namespace myClientTCP
             //    //colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 - 100), "", () => JoinLudo(colors[colors.Length - 1 - i]), colors[colors.Length - 1 - i]));
             //}
 
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 0 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[0]), colors[0]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 1 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[1]), colors[1]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 2 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[2]), colors[2]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 3 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[3]), colors[3]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 4 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[4]), colors[4]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 5 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[5]), colors[5]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 6 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[6]), colors[6]));
-            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 7 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[7]), colors[7]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 0 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[0]), colors[0]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 1 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[1]), colors[1]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 2 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[2]), colors[2]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 3 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[3]), colors[3]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 4 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[4]), colors[4]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 5 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[5]), colors[5]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 6 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[6]), colors[6]));
+            colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 7 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[7]), colors[7]));
 
 
             foreach (var button in colorButtons)
@@ -376,11 +410,7 @@ namespace myClientTCP
             }
         }
 
-        /// <summary>
-        /// A method used to insert a player into the game with their a color and name of their choice
-        /// </summary>
-        /// <param name="chosenColor"></param>
-        private void JoinLudo(Color chosenColor)
+        private void ChangeColor(Color chosenColor)
         {
 
             foreach (var button in colorButtons)
@@ -388,11 +418,17 @@ namespace myClientTCP
                 Destroy(button);
             }
 
-            GameObject player = new GameObject();
+            //GameObject newLudoPiece = LudoPieceFactory.Instance.Create(currentInputText, chosenColor);
 
-            player.AddComponent<Player>(currentInputText, chosenColor, corners[playerList.Count]);
-            newGameObjects.Add(player);
-            playerList.Add(player.GetComponent<Player>() as Player);
+            //newGameObjects.Add(newLudoPiece);
+
+            //newLudoPiece.Transform.Position = piece1StartPos;
+
+            //playerList.Add(newLudoPiece.GetComponent<LudoPiece>() as LudoPiece);
+
+            joinGame = true;
+ 
+            client.SendMessage(client.writer, new ColorMessage { pieceColor = chosenColor.ToString()});
         }
 
         /// <summary>

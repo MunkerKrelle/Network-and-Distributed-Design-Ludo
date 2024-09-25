@@ -26,25 +26,27 @@ namespace myClientTCP
         /// </summary>
         public void GetMeGoing()
         {
+            //ClientGameWorld.Instance.myClientsList.Add(client);
+            //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
+            //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
+            //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
+            //client.Connect("192.168.87.116", 12000); 10.131.66.102
             client.Connect("10.131.66.102", 12000);
         }
 
-        public void RunOnce()
+        public void RunOnce(string userName)
         {
             writer = new BinaryWriter(client.GetStream());
-            while (true)
-            {
-                string userName = "bob";
-
                 userName.Replace(" ", "");
                 if (userName.Length > 0)
                 {
 
                     SendMessage(writer, new JoinMessage { name = userName });
-                    break;
-                }
-            }
+                    //SendMessage(writer, rollMes);
+                    //Console.WriteLine(rollMes);
 
+                    //break;
+                }
             // Start a thread to receive messages
             Thread receiveThread = new Thread(() => ReceiveMessages(client));
             receiveThread.IsBackground = true;
@@ -103,6 +105,9 @@ namespace myClientTCP
                     break;
                 case MessageType.Roll:
                     data = MessagePackSerializer.Serialize((RollMessage)message);
+                    break;
+                case MessageType.Color:
+                    data = MessagePackSerializer.Serialize((ColorMessage)message);
                     break;
                 default:
                     Console.WriteLine($"Unable to serialize type: " + message.type);

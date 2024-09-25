@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using MessagePack;
+using Microsoft.Xna.Framework;
 
 namespace Ludo_Server
 {
@@ -36,6 +37,19 @@ namespace Ludo_Server
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
 
+        private List<ClientInfo> joinedPlayers = new List<ClientInfo>();
+        
+        //public int playersJoined;
+
+        //private List<Vector2> startPos = new List<Vector2>() {
+        //    new Vector2(50, 50),
+        //    new Vector2(50, 150),
+        //    new Vector2(50, 250),
+        //    new Vector2(50, 350) };
+
+        //server.Start();
+        //Console.WriteLine("Server started... listening on port 12000");
+
         /// <summary>
         /// SendToClients sends messages to the clients containing data, for instance the value of a roll, or a new player joining the game
         /// These messages are sent as bytes, with the length of the message sent first, as a 4-byte integer
@@ -62,6 +76,7 @@ namespace Ludo_Server
     {
         Guid clientId = Guid.NewGuid();
 
+        
         BinaryWriter writer = new BinaryWriter(client.GetStream());
         BinaryReader reader = new BinaryReader(client.GetStream());
 
@@ -72,6 +87,7 @@ namespace Ludo_Server
                     int messageLength = reader.ReadInt32();
                     Random myRandom = new Random();
                     int roll = 0;
+
                     byte messageType = reader.ReadByte();
                     MessageType recievedType = (MessageType)messageType;
 
@@ -81,7 +97,9 @@ namespace Ludo_Server
                     {
                         case MessageType.Join:
                             JoinMessage joinMsg = MessagePackSerializer.Deserialize<JoinMessage>(payLoadAsBytes);
-                            idToClientInfo.Add(clientId, new ClientInfo { name = joinMsg.name, writer = writer });
+                            ClientInfo newInfoClient = new ClientInfo { name = joinMsg.name, writer = writer };
+                            idToClientInfo.Add(clientId, newInfoClient);
+                            joinedPlayers.Add(newInfoClient);
                             string welcomeMsg = "New user joined!! Welcome: " + joinMsg.name;
                             Console.WriteLine(welcomeMsg);
                             SendToClients(welcomeMsg, idToClientInfo.Values.ToArray());
@@ -101,8 +119,21 @@ namespace Ludo_Server
                             //Afterwards the value of the roll is sent to the clients
                             roll = myRandom.Next(1,7);
                             RollMessage rolledRequest = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
+                            //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
+                            //Console.WriteLine(chatMsgWithName);
                             string rollMsg = ($"CodeRoll{roll}");
+                            SendToClients(rollMsg, idToClientInfo.Values.ToArray());
+                            //MovePieceForClients(roll, idToClientInfo.Values.ToArray());
+                            //ClientGameWorld.Instance.CheckState(roll);
                             break;
+                        case MessageType.Color:
+                            ColorMessage createPiece = MessagePackSerializer.Deserialize<ColorMessage>(payLoadAsBytes);
+                            idToClientInfo[clientId].color = createPiece.pieceColor;
+                            //string rollMsg = ($"CodeRoll{roll}");
+                            string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color}");
+                            SendToClients(colorMSG, idToClientInfo.Values.ToArray());
+                            break;
+
                         default:
                             break;
                     }
@@ -113,6 +144,8 @@ namespace Ludo_Server
             }
             finally
             {
+                Console.WriteLine($"Client disconnected: {clientId}");
+                //playersJoined--;
                 client.Dispose();
             }
 
