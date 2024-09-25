@@ -214,6 +214,7 @@ namespace myClientTCP
             {
                 go.Update(gameTime);
             }
+
             base.Update(gameTime);
             Cleanup();
         }
