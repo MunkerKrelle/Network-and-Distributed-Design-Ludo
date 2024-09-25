@@ -4,6 +4,7 @@ using myClientTCP;
 
 namespace BuilderPattern
 {
+
     internal class DieBuilder : IBuilder
     {
         private GameObject gameObject;

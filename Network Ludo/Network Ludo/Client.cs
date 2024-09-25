@@ -38,22 +38,18 @@ namespace myClientTCP
         public void RunOnce()
         {
             writer = new BinaryWriter(client.GetStream());
-            while (test == true)
+            while (true)
             {
-                string userName = "bob"; //my change
-                //RollMessage rollMes = new RollMessage();
+                string userName = "bob";
+
                 userName.Replace(" ", "");
                 if (userName.Length > 0)
                 {
 
                     SendMessage(writer, new JoinMessage { name = userName });
-                    //SendMessage(writer, rollMes);
-                    //Console.WriteLine(rollMes);
                     test = false;
                     break;
                 }
-                test = false;
-                break; //this is to be removed later
             }
 
             // Start a thread to receive messages
@@ -62,21 +58,10 @@ namespace myClientTCP
             receiveThread.Start();
         }
 
-        public void MyMessages(string message)
-        {
-            //string message = Console.ReadLine(); //old code
-            //string message = "i am so awesome";
-            if (message == "list")
-            {
-                SendMessage(writer, new ListMessage()); //this needs to be reintroduced when sending message.
-            }
-            else
-            {
-                SendMessage(writer, new ChatMessage { message = message });
-                Console.WriteLine();
-            }
-        }
-
+        /// <summary>
+        /// Recieve serialized messages from the server, which is to be deserialized.
+        /// </summary>
+        /// <param name="client"></param>
         void ReceiveMessages(TcpClient client)
         {
             Thread.Sleep(100);
@@ -103,6 +88,11 @@ namespace myClientTCP
             }
         }
 
+        /// <summary>
+        /// Sends messages with requests to the server as a byte array of data, containing the request and the nessacary requirements 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="message"></param>
         public void SendMessage(BinaryWriter writer, Message message)
         {
             byte[] data = new byte[0];
