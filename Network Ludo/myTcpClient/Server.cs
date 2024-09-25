@@ -32,7 +32,17 @@ namespace Ludo_Server
         //server.Start();
         //Console.WriteLine("Server started... listening on port 12000");
 
-
+        void SendToClients(string message, params ClientInfo[] clients)
+    {
+            byte[] data = MessagePackSerializer.Serialize(message);
+            foreach (ClientInfo client in clients)
+            {
+                //Send the length of the message as 4 - byte integer
+                client.writer.Write(data.Length);
+                client.writer.Write(data);
+                client.writer.Flush();
+            }
+        }
 
         void MovePieceForClients(int message, params ClientInfo[] clients)
         {
@@ -47,26 +57,14 @@ namespace Ludo_Server
         }
 
         public void HandleClient(TcpClient client)
-        {
-            Guid clientId = Guid.NewGuid();
+    {
+        Guid clientId = Guid.NewGuid();
 
-            BinaryWriter writer = new BinaryWriter(client.GetStream());
-            BinaryReader reader = new BinaryReader(client.GetStream());
-
-            
-            List<string> chatLog = new List<string>();
+        BinaryWriter writer = new BinaryWriter(client.GetStream());
+        BinaryReader reader = new BinaryReader(client.GetStream());
 
             try
             {
-                
-                if (chatLog.Count > 0)
-                {
-                    foreach (var message in chatLog)
-                    {
-                        SendToClient(message, writer);  
-                    }
-                }
-
                 while (client.Connected)
                 {
                     int messageLength = reader.ReadInt32();
@@ -86,31 +84,38 @@ namespace Ludo_Server
                             Console.WriteLine(welcomeMsg);
                             SendToClients(welcomeMsg, idToClientInfo.Values.ToArray());
                             break;
-
                         case MessageType.Chat:
                             ChatMessage chatMsg = MessagePackSerializer.Deserialize<ChatMessage>(payLoadAsBytes);
                             string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
                             Console.WriteLine(chatMsgWithName);
-
-                            // Tilføj beskeden til chatloggen
-                            chatLog.Add(chatMsgWithName);
-
-                            // Send beskeden til alle klienter
                             SendToClients(chatMsgWithName, idToClientInfo.Values.ToArray());
                             break;
-
                         case MessageType.List:
                             string listOfClients = string.Join("\n", idToClientInfo.Values.Select(x => x.name));
                             SendToClients(listOfClients, idToClientInfo[clientId]);
                             break;
-
                         case MessageType.Roll:
-                            roll = myRandom.Next(1, 7);
+                            roll = myRandom.Next(1,7);
                             RollMessage rolledRequest = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
+                            //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
+                            //Console.WriteLine(chatMsgWithName);
+                            //if (Int32.Parse(rolledRequest.roll) <= 6 && Int32.Parse(rolledRequest.roll) >= 1)
+                            //{
                             string rollMsg = ($"CodeRoll{roll}");
                             SendToClients(rollMsg, idToClientInfo.Values.ToArray());
-                            break;
+                            //MovePieceForClients(roll, idToClientInfo.Values.ToArray());
+                            //ClientGameWorld.Instance.CheckState(roll);
 
+
+
+                            //}
+
+                            break;
+                        //case MessageType.Roll:
+                        //    RollMessage rollMsg = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
+                        //    roll = GameWorld.Instance.CheckState(roll);
+
+                        //    break;
                         default:
                             break;
                     }
@@ -126,27 +131,9 @@ namespace Ludo_Server
 
                 client.Dispose();
             }
+
         }
 
-        private void SendToClient(string message, BinaryWriter writer)
-        {
-            byte[] data = MessagePackSerializer.Serialize(message);
-            writer.Write(data.Length);
-            writer.Write(data);
-            writer.Flush();
-        }
-
-        private void SendToClients(string message, params ClientInfo[] clients)
-        {
-            byte[] data = MessagePackSerializer.Serialize(message);
-            foreach (ClientInfo client in clients)
-            {
-                client.writer.Write(data.Length);
-                client.writer.Write(data);
-                client.writer.Flush();
-            }
-        }
-
-    }
+}
 }
 
