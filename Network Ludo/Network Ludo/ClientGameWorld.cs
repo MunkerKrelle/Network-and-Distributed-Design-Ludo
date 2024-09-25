@@ -427,8 +427,8 @@ namespace myClientTCP
             //playerList.Add(newLudoPiece.GetComponent<LudoPiece>() as LudoPiece);
 
             joinGame = true;
- 
-            client.SendMessage(client.writer, new ColorMessage { pieceColor = chosenColor.ToString()});
+
+            client.SendMessage(client.writer, new ColorMessage { pieceColor = $"{chosenColor.R}{chosenColor.G}{chosenColor.B}" });
         }
 
         /// <summary>
