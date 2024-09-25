@@ -69,7 +69,10 @@ namespace ComponentPattern
                         if (grid[row, col].Contains(mousePosition))
                         {
                             
-                            
+                            if (cellColors[row, col] == Color.White)
+                                cellColors[row, col] = Color.Red;
+                            else
+                                cellColors[row, col] = Color.White;
                         }
                     }
                 }

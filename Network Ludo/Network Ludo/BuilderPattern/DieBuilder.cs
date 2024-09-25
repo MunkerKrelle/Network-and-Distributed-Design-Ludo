@@ -27,7 +27,7 @@ namespace BuilderPattern
             animator.AddAnimation(BuildAnimation("Idle4", new string[] { "Side4" }));
             animator.AddAnimation(BuildAnimation("Idle5", new string[] { "Side5" }));
             animator.AddAnimation(BuildAnimation("Idle6", new string[] { "Side6" }));
-            animator.AddAnimation(BuildAnimation("AnimateDie", new string[] { "Side1", "Side2", "Side3", "Side4", "Side5", "Side6" }));
+            animator.AddAnimation(BuildAnimation("RollDie", new string[] { "Side1", "Side2", "Side3", "Side4", "Side5", "Side6" }));
 
         }
 
