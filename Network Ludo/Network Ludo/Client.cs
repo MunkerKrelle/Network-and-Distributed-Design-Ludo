@@ -75,6 +75,10 @@ namespace myClientTCP
                         ClientGameWorld.Instance.CheckState(returnedRoll);
                     }
                 }
+                else
+                {
+                    ClientGameWorld.Instance.chatBox.Add(message);
+                }
 
             }
             if (client.Connected == false)

@@ -52,6 +52,8 @@ namespace myClientTCP
 
         private static List<Button> buttons = new List<Button>();
 
+        public List<string> chatBox = new List<string>();
+
         GameObject piece1;
         GameObject piece2;
         GameObject piece3;
@@ -195,15 +197,7 @@ namespace myClientTCP
 
             if (joinGame == true)
             {
-                if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
-                {
-                    client.isChatting = true;
-                }
-
-                if (client.isChatting == true)
-                {
-                    EnterMessage(keyState);
-                }
+                EnterMessage(keyState);
             }
             else
             {
@@ -252,6 +246,10 @@ namespace myClientTCP
                     else if (key >= Keys.D0 && key <= Keys.D9)
                     {
                         inputText += (key - Keys.D0).ToString();
+                    }
+                    else if (key == Keys.Space)
+                    {
+                        inputText += " ";
                     }
                     else if (key == Keys.Enter)
                     {
@@ -320,9 +318,15 @@ namespace myClientTCP
                 }
             }
 
+            for (int i = 0; i < chatBox.Count; i++)
+            {
+                _spriteBatch.DrawString(font, chatBox[i], new Vector2(800, 500 - 20 * i), Color.Black, 0, Origin(chatBox[i]), 1, SpriteEffects.None, 1f);
+            }
+
+
             for (int i = 0; i < playerList.Count; i++)
             {
-                _spriteBatch.DrawString(font, playerList[i].name, new Vector2(playerList[i].GameObject.Transform.Position.X, playerList[i].GameObject.Transform.Position.Y) , playerList[i].color, 0, Origin(playerList[i].name), 1, SpriteEffects.None, 1f);
+                _spriteBatch.DrawString(font, playerList[i].name, new Vector2(playerList[i].GameObject.Transform.Position.X, playerList[i].GameObject.Transform.Position.Y), playerList[i].color, 0, Origin(playerList[i].name), 1, SpriteEffects.None, 1f);
             }
 
             _spriteBatch.End();
@@ -362,7 +366,7 @@ namespace myClientTCP
                 }
             }
             previousKeyState = keyState;
-            
+
         }
 
         private Vector2 Origin(string input)
@@ -427,8 +431,8 @@ namespace myClientTCP
             //playerList.Add(newLudoPiece.GetComponent<LudoPiece>() as LudoPiece);
 
             joinGame = true;
- 
-            client.SendMessage(client.writer, new ColorMessage { pieceColor = chosenColor.ToString()});
+
+            client.SendMessage(client.writer, new ColorMessage { pieceColor = chosenColor.ToString() });
         }
 
         /// <summary>
