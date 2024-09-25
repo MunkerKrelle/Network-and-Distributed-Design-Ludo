@@ -33,13 +33,13 @@ namespace ComponentPattern
 
         public override void Awake()
         {
-            for (int i = 0; i < 4; i++)
-            {
-                ludoPieces.Add(LudoPieceFactory.Instance.Create(color, playerName));
-                ludoPieces[i].Transform.Position = new Vector2(pos.X - 100 + 70 * i, pos.Y + 50);
-                ClientGameWorld.Instance.Instantiate(ludoPieces[i]);
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    ludoPieces.Add(LudoPieceFactory.Instance.Create(color, playerName));
+            //    ludoPieces[i].Transform.Position = new Vector2(pos.X - 100 + 70 * i, pos.Y + 50);
+            //    ClientGameWorld.Instance.Instantiate(ludoPieces[i]);
 
-            }
+            //}
         }
 
         /// <summary>

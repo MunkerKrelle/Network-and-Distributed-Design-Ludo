@@ -59,7 +59,7 @@ namespace myClientTCP
         private Vector2 piece3StartPos = new Vector2(50, 250);
         private Vector2 piece4StartPos = new Vector2(50, 350);
 
-        public List<Player> playerList = new List<Player>();
+        public List<LudoPiece> playerList = new List<LudoPiece>();
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -126,20 +126,20 @@ namespace myClientTCP
 
             Instantiate(gridObject);
 
-            piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
-            piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
-            piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
-            piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
+            //piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
+            //piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
+            //piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
+            //piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
 
-            gameObjects.Add(piece1);
-            gameObjects.Add(piece2);
-            gameObjects.Add(piece3);
-            gameObjects.Add(piece4);
+            //gameObjects.Add(piece1);
+            //gameObjects.Add(piece2);
+            //gameObjects.Add(piece3);
+            //gameObjects.Add(piece4);
 
-            piece1.Transform.Position = new Vector2(40, 50);
-            piece2.Transform.Position = new Vector2(40, 150);
-            piece3.Transform.Position = new Vector2(40, 250);
-            piece4.Transform.Position = new Vector2(40, 350);
+            //piece1.Transform.Position = new Vector2(40, 50);
+            //piece2.Transform.Position = new Vector2(40, 150);
+            //piece3.Transform.Position = new Vector2(40, 250);
+            //piece4.Transform.Position = new Vector2(40, 350);
 
             foreach (GameObject go in gameObjects)
             {
@@ -171,6 +171,17 @@ namespace myClientTCP
 
             KeyboardState keyState = Keyboard.GetState();
 
+            mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                isPressed = true;
+            }
+            else
+            {
+                isPressed = false;
+            }
+
             if (joinGame == true)
             {
                 if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
@@ -185,7 +196,7 @@ namespace myClientTCP
             }
             else
             {
-                WriteText(keyState);
+                WriteText();
             }
 
 
@@ -296,7 +307,7 @@ namespace myClientTCP
 
             for (int i = 0; i < playerList.Count; i++)
             {
-                _spriteBatch.DrawString(font, playerList[i].playerName, corners[i], playerList[i].color, 0, Origin(playerList[i].playerName), 1, SpriteEffects.None, 1f);
+                _spriteBatch.DrawString(font, playerList[i].name, new Vector2(playerList[i].GameObject.Transform.Position.X, playerList[i].GameObject.Transform.Position.Y) , playerList[i].color, 0, Origin(playerList[i].name), 1, SpriteEffects.None, 1f);
             }
 
             _spriteBatch.End();
@@ -304,7 +315,7 @@ namespace myClientTCP
             base.Draw(gameTime);
         }
 
-        public void WriteText(KeyboardState keyState)
+        public void WriteText()
         {
             keyState = Keyboard.GetState();
 
@@ -387,11 +398,14 @@ namespace myClientTCP
                 Destroy(button);
             }
 
-            GameObject player = new GameObject();
+            GameObject newLudoPiece = LudoPieceFactory.Instance.Create(currentInputText, chosenColor);
 
-            player.AddComponent<Player>(currentInputText, chosenColor, corners[playerList.Count]);
-            newGameObjects.Add(player);
-            playerList.Add(player.GetComponent<Player>() as Player);
+            newGameObjects.Add(newLudoPiece);
+
+            newLudoPiece.Transform.Position = piece1StartPos;
+
+            playerList.Add(newLudoPiece.GetComponent<LudoPiece>() as LudoPiece);
+            joinGame = true;
         }
 
         public void CheckState(int roll)

@@ -26,7 +26,7 @@ namespace FactoryPattern
 
         private GameObject prototype;
 
-        public GameObject Create(Color color, string name)
+        public GameObject Create(string name, Color color)
         {
             GameObject go = new GameObject();
 
@@ -35,7 +35,7 @@ namespace FactoryPattern
             go.Transform.Scale = new Vector2(0.05f, 0.05f);
             go.Transform.Color = color;
             go.Transform.Layer = 1f;
-            go.AddComponent<LudoPiece>(name, LudoState.inBase);
+            go.AddComponent<LudoPiece>(name, color);
 
             return go;
         }

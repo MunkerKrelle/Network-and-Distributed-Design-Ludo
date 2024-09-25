@@ -7,7 +7,7 @@ using MessagePack;
 
 namespace Ludo_Server
 {
-    public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 }
+    public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 , CreatePiece = 4}
     [MessagePackObject]
     public abstract class Message
     {
@@ -47,4 +47,6 @@ namespace Ludo_Server
         [IgnoreMember]
         public override MessageType type => MessageType.Roll;
     }
+
+
 }
