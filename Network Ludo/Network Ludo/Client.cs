@@ -27,8 +27,6 @@ namespace myClientTCP
         public void GetMeGoing()
         {
             //ClientGameWorld.Instance.myClientsList.Add(client);
-            myTestInt = 5;
-            test = true;
             //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
@@ -39,10 +37,6 @@ namespace myClientTCP
         public void RunOnce(string userName)
         {
             writer = new BinaryWriter(client.GetStream());
-            while (test == true)
-            {
-                string userName = "bob"; //my change
-                //RollMessage rollMes = new RollMessage();
                 userName.Replace(" ", "");
                 if (userName.Length > 0)
                 {
@@ -50,13 +44,9 @@ namespace myClientTCP
                     SendMessage(writer, new JoinMessage { name = userName });
                     //SendMessage(writer, rollMes);
                     //Console.WriteLine(rollMes);
-                    test = false;
+
                     //break;
                 }
-                test = false;
-                
-            //}
-
             // Start a thread to receive messages
             Thread receiveThread = new Thread(() => ReceiveMessages(client));
             receiveThread.IsBackground = true;
