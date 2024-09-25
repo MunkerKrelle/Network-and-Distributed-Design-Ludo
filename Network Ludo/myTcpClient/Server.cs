@@ -29,24 +29,10 @@ namespace Ludo_Server
         Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
-        //server.Start();
-        //Console.WriteLine("Server started... listening on port 12000");
 
         void SendToClients(string message, params ClientInfo[] clients)
     {
             byte[] data = MessagePackSerializer.Serialize(message);
-            foreach (ClientInfo client in clients)
-            {
-                //Send the length of the message as 4 - byte integer
-                client.writer.Write(data.Length);
-                client.writer.Write(data);
-                client.writer.Flush();
-            }
-        }
-
-        void MovePieceForClients(int message, params ClientInfo[] clients)
-        {
-            byte[] data = MessagePackSerializer.Serialize(message.ToString());
             foreach (ClientInfo client in clients)
             {
                 //Send the length of the message as 4 - byte integer
