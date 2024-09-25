@@ -11,6 +11,9 @@ using System.Linq;
 
 namespace myClientTCP
 {
+    /// <summary>
+    /// This class is used to connect to the game server as well as instantiating the necessary components and methods for the client to send and recieve messages
+    /// </summary>
     public class Client
     {
         TcpClient client = new TcpClient();
@@ -18,6 +21,9 @@ namespace myClientTCP
         public bool isChatting = false;
         public string letters;
 
+        /// <summary>
+        /// The client connects to the correct IP, thus joining the game
+        /// </summary>
         public void GetMeGoing()
         {
             client.Connect("10.131.66.102", 12000);
