@@ -31,7 +31,7 @@ namespace myClientTCP
             //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
             //client.Connect("192.168.87.116", 12000); 10.131.66.102
-            client.Connect("10.131.66.102", 12000);
+            client.Connect("10.131.68.50", 12000);
         }
 
         public void RunOnce(string userName)
