@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using Ludo_Server;
+using MessagePack;
 
 namespace myClientTCP
 {
@@ -60,6 +61,7 @@ namespace myClientTCP
         private Vector2 piece4StartPos = new Vector2(50, 350);
 
         public List<Player> playerList = new List<Player>();
+        private List<string> chatMessages = new List<string>();
 
         public static MouseState mouseState;
         public static MouseState newState;
@@ -180,6 +182,7 @@ namespace myClientTCP
                 EnterMessage(keyState);
             }
             //WriteText();
+            ReceiveMessagesFromServer();
 
             if (keyState.IsKeyDown(Keys.B))
             {
@@ -266,6 +269,27 @@ namespace myClientTCP
         {
             destroyedGameObjects.Add(go);
         }
+        private void ReceiveMessagesFromServer()
+        {
+            while (client.reader.BaseStream.CanRead)
+            {
+                try
+                {
+                    int messageLength = client.reader.ReadInt32();
+                    byte[] data = client.reader.ReadBytes(messageLength);
+
+                    string message = MessagePackSerializer.Deserialize<string>(data);
+
+                    // Tilføj beskeden til chatlisten
+                    chatMessages.Add(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error receiving message: " + ex.Message);
+                    break;
+                }
+            }
+        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -287,17 +311,18 @@ namespace myClientTCP
 
             if (!string.IsNullOrEmpty(inputText))
             {
-                _spriteBatch.DrawString(font, inputText, new Vector2(10, _graphics.PreferredBackBufferHeight - 30), Color.Black);
+                _spriteBatch.DrawString(font, inputText, new Vector2(10, _graphics.PreferredBackBufferHeight - 30), Color.White);
+
             }
 
-            // Tegn alle modtagne chatbeskeder (hvis du allerede gemmer dem)
+
             int yOffset = 10;
-            foreach (var chat in Server.Instance.idToClientInfo.Values)
+            foreach (var chat in chatMessages)
             {
-                string chatMessage = chat.name + ": " + inputText;  // Tilføj din logik til at hente beskeder fra serveren
-                _spriteBatch.DrawString(font, chatMessage, new Vector2(10, yOffset), Color.Black);
-                yOffset += 20;  // Placer beskederne under hinanden
+                _spriteBatch.DrawString(font, chat, new Vector2(10, yOffset), Color.Black);
+                yOffset += 20;  
             }
+
 
             _spriteBatch.End();
 

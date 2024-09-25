@@ -32,12 +32,15 @@ namespace myClientTCP
             //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
             //client.Connect("192.168.87.116", 12000); 10.131.66.102
-            client.Connect("10.131.66.102", 12000);
+            client.Connect("10.131.66.112", 12000);
         }
+
+        public BinaryReader reader; 
 
         public void RunOnce()
         {
             writer = new BinaryWriter(client.GetStream());
+            reader = new BinaryReader(client.GetStream());
             while (test == true)
             {
                 string userName = "bob"; //my change
@@ -64,8 +67,7 @@ namespace myClientTCP
 
         public void MyMessages(string message)
         {
-            //string message = Console.ReadLine(); //old code
-            //string message = "i am so awesome";
+
             if (message == "list")
             {
                 SendMessage(writer, new ListMessage()); //this needs to be reintroduced when sending message.
