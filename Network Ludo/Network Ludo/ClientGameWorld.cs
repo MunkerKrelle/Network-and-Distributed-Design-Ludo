@@ -126,20 +126,20 @@ namespace myClientTCP
 
             Instantiate(gridObject);
 
-            //piece1 = LudoPieceFactory.Instance.Create(Color.Blue, "Poul");
-            //piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
-            //piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
-            //piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
+            piece1 = LudoPieceFactory.Instance.Create("Poul", Color.Blue);
+            piece2 = LudoPieceFactory.Instance.Create(Color.Green, "Frank");
+            piece3 = LudoPieceFactory.Instance.Create(Color.Red, "Lars");
+            piece4 = LudoPieceFactory.Instance.Create(Color.Yellow, "John");
 
-            //gameObjects.Add(piece1);
-            //gameObjects.Add(piece2);
-            //gameObjects.Add(piece3);
-            //gameObjects.Add(piece4);
+            gameObjects.Add(piece1);
+            gameObjects.Add(piece2);
+            gameObjects.Add(piece3);
+            gameObjects.Add(piece4);
 
-            //piece1.Transform.Position = new Vector2(40, 50);
-            //piece2.Transform.Position = new Vector2(40, 150);
-            //piece3.Transform.Position = new Vector2(40, 250);
-            //piece4.Transform.Position = new Vector2(40, 350);
+            piece1.Transform.Position = new Vector2(40, 50);
+            piece2.Transform.Position = new Vector2(40, 150);
+            piece3.Transform.Position = new Vector2(40, 250);
+            piece4.Transform.Position = new Vector2(40, 350);
 
             foreach (GameObject go in gameObjects)
             {

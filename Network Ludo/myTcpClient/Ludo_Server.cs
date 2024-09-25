@@ -11,6 +11,9 @@ using System.Threading;
 
 namespace Ludo_Server
 {
+
+    public enum GameState { Player1, Player2, Player3, Player4 }
+
     public class Ludo_Server : Game
     {
         private static Ludo_Server instance;
