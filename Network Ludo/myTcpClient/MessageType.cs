@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MessagePack;
+using Microsoft.Xna.Framework;
 
 namespace Ludo_Server
 {
-    public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 , CreatePiece = 4}
+    public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 , Color = 4}
     [MessagePackObject]
     public abstract class Message
     {
@@ -46,6 +47,14 @@ namespace Ludo_Server
 
         [IgnoreMember]
         public override MessageType type => MessageType.Roll;
+    }
+    public class ColorMessage : Message
+    {
+        [Key(0)]
+        public string pieceColor;
+
+        [IgnoreMember]
+        public override MessageType type => MessageType.Color;
     }
 
 
