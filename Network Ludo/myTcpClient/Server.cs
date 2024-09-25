@@ -12,8 +12,14 @@ using Microsoft.Xna.Framework;
 
 namespace Ludo_Server
 {
+    /// <summary>
+    /// The class Server upholds the responsibility of creating an instance of the server. This class also handles new clients and sends messages out to the clients.
+    /// </summary>
     public class Server
     {
+        /// <summary>
+        /// Making this class a Singleton
+        /// </summary>
         private static Server instance;
         public static Server Instance
         {
@@ -27,7 +33,7 @@ namespace Ludo_Server
             }
         }
 
-        Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
 
@@ -44,30 +50,28 @@ namespace Ludo_Server
         //server.Start();
         //Console.WriteLine("Server started... listening on port 12000");
 
+        /// <summary>
+        /// SendToClients sends messages to the clients containing data, for instance the value of a roll, or a new player joining the game
+        /// These messages are sent as bytes, with the length of the message sent first, as a 4-byte integer
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="clients"></param>
         void SendToClients(string message, params ClientInfo[] clients)
     {
             byte[] data = MessagePackSerializer.Serialize(message);
             foreach (ClientInfo client in clients)
             {
-                //Send the length of the message as 4 - byte integer
                 client.writer.Write(data.Length);
                 client.writer.Write(data);
                 client.writer.Flush();
             }
         }
 
-        void MovePieceForClients(int message, params ClientInfo[] clients)
-        {
-            byte[] data = MessagePackSerializer.Serialize(message.ToString());
-            foreach (ClientInfo client in clients)
-            {
-                //Send the length of the message as 4 - byte integer
-                client.writer.Write(data.Length);
-                client.writer.Write(data);
-                client.writer.Flush();
-            }
-        }
-
+        /// <summary>
+        /// HandleClient is used to handling every type of client request, such as join, chat or roll.
+        /// Requests from clients are deserialized and reacts to theses requests
+        /// </summary>
+        /// <param name="client"></param>
         public void HandleClient(TcpClient client)
     {
         Guid clientId = Guid.NewGuid();
@@ -111,6 +115,8 @@ namespace Ludo_Server
                             SendToClients(listOfClients, idToClientInfo[clientId]);
                             break;
                         case MessageType.Roll:
+                            //If a roll is requested, the int roll is set to a new random (Range 1-6) and this value is used to move the client's piece.
+                            //Afterwards the value of the roll is sent to the clients
                             roll = myRandom.Next(1,7);
                             RollMessage rolledRequest = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
                             //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
@@ -135,7 +141,6 @@ namespace Ludo_Server
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred for client {clientId}: {ex.Message}");
             }
             finally
             {

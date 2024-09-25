@@ -49,13 +49,6 @@ namespace Ludo_Server
             base.Initialize();
         }
 
-        protected override void LoadContent()
-        {
-            //_spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-        }
-
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -63,13 +56,6 @@ namespace Ludo_Server
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeElapsed += DeltaTime;
-            
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-            base.Draw(gameTime);
         }
 
         private void WhileLoopThread()
