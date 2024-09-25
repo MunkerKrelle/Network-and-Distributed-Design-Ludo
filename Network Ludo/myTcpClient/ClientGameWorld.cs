@@ -64,9 +64,8 @@ namespace myTcpClient
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // Indlæs skrifttypen fra Content-mappen
             font = Content.Load<SpriteFont>("textType");
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -76,17 +75,14 @@ namespace myTcpClient
 
             KeyboardState keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Enter) && client.isChatting != true)
+            // Check if chat mode is active
+            if (client.isChatting == true)
             {
-                client.isChatting = true;
+                EnterMessage(keyState);  // Håndter brugerens chatinput
             }
 
-            if (client.isChatting == true) 
-            {
-                EnterMessage(keyState);
-            }
 
-            
+
             if (keyState.IsKeyDown(Keys.B))
             {
                 //GameWorld.Instance.CheckState(4);
@@ -105,36 +101,45 @@ namespace myTcpClient
         {
             keyState = Keyboard.GetState();
 
+            // Check for backspace to delete last character
             if (keyState.IsKeyDown(Keys.Back) && previousKeyState.IsKeyUp(Keys.Back))
             {
                 if (inputText.Length > 0)
-                    inputText = inputText[..^1]; // Remove last character
+                    inputText = inputText[..^1]; // Fjern sidste tegn
             }
 
             foreach (Keys key in Enum.GetValues(typeof(Keys)))
             {
                 if (keyState.IsKeyDown(key) && previousKeyState.IsKeyUp(key))
                 {
-                    // Check if the key is a character key
+                    // Tjek for bogstavstaster
                     if (key >= Keys.A && key <= Keys.Z)
                     {
                         inputText += key.ToString();
                     }
+                    // Tjek for tal
                     else if (key >= Keys.D0 && key <= Keys.D9)
                     {
                         inputText += (key - Keys.D0).ToString();
                     }
+                    // Tjek for mellemrum
+                    else if (key == Keys.Space)
+                    {
+                        inputText += " ";
+                    }
+                    // Når Enter er trykket, send beskeden
                     else if (key == Keys.Enter)
                     {
-                        client.letters = inputText;
-                        client.SendMessage(client.writer, new ChatMessage { message = client.letters });
+                        client.SendMessage(client.writer, new ChatMessage { message = inputText });
+                        inputText = string.Empty;  // Nulstil input efter besked er sendt
                     }
                 }
             }
+
             previousKeyState = keyState;
-
-
         }
+
+
         private Vector2 Origin(string input)
         {
             Vector2 fontLength = GameWorld.font.MeasureString(input);
@@ -147,12 +152,28 @@ namespace myTcpClient
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            foreach (ClientInfo chat in Server.Instance.idToClientInfo.Values)
+            _spriteBatch.Begin();
+
+            // Tegn den aktuelle indtastede besked
+            if (!string.IsNullOrEmpty(inputText))
             {
-                _spriteBatch.DrawString(font,inputText, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.Black, 0, Origin(inputText), 1, SpriteEffects.None, 1f);
+                _spriteBatch.DrawString(font, inputText, new Vector2(10, _graphics.PreferredBackBufferHeight - 30), Color.Black);
             }
+
+            // Tegn alle modtagne chatbeskeder (hvis du allerede gemmer dem)
+            int yOffset = 10;
+            foreach (var chat in Server.Instance.idToClientInfo.Values)
+            {
+                string chatMessage = chat.name + ": " + inputText;  // Tilføj din logik til at hente beskeder fra serveren
+                _spriteBatch.DrawString(font, chatMessage, new Vector2(10, yOffset), Color.Black);
+                yOffset += 20;  // Placer beskederne under hinanden
+            }
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+
     }
 }

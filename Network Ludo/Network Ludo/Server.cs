@@ -29,7 +29,7 @@ namespace Network_Ludo
 
         public int roll = 0;
 
-        Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        public Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
         //server.Start();
@@ -90,7 +90,7 @@ namespace Network_Ludo
                             ChatMessage chatMsg = MessagePackSerializer.Deserialize<ChatMessage>(payLoadAsBytes);
                             string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
                             Console.WriteLine(chatMsgWithName);
-                            SendToClients(chatMsgWithName, idToClientInfo.Values.ToArray());
+                            SendToClients(chatMsgWithName, idToClientInfo.Values.ToArray());  // Send beskeden til alle klienter
                             break;
                         case MessageType.List:
                             string listOfClients = string.Join("\n", idToClientInfo.Values.Select(x => x.name));
@@ -133,6 +133,6 @@ namespace Network_Ludo
 
         }
 
-}
+    }
 }
 
