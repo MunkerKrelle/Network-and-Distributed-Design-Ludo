@@ -14,24 +14,12 @@ namespace myClientTCP
     public class Client
     {
         TcpClient client = new TcpClient();
-        public int myTestInt;
-        public bool test = true;
-        //client.Connect("localhost", 12000);
         public BinaryWriter writer;
-        //Console.WriteLine("Connected to server...");
         public bool isChatting = false;
-        //private object locker = new object();
         public string letters;
 
         public void GetMeGoing()
         {
-            //ClientGameWorld.Instance.myClientsList.Add(client);
-            myTestInt = 5;
-            test = true;
-            //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
-            //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
-            //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
-            //client.Connect("192.168.87.116", 12000); 10.131.66.102
             client.Connect("10.131.66.102", 12000);
         }
 
@@ -47,7 +35,6 @@ namespace myClientTCP
                 {
 
                     SendMessage(writer, new JoinMessage { name = userName });
-                    test = false;
                     break;
                 }
             }
