@@ -277,6 +277,20 @@ namespace myClientTCP
                 _spriteBatch.DrawString(font, playerList[i].playerName, corners[i], playerList[i].color, 0, Origin(playerList[i].playerName), 1, SpriteEffects.None, 1f);
             }
 
+            if (!string.IsNullOrEmpty(inputText))
+            {
+                _spriteBatch.DrawString(font, inputText, new Vector2(10, _graphics.PreferredBackBufferHeight - 30), Color.Black);
+            }
+
+            // Tegn alle modtagne chatbeskeder (hvis du allerede gemmer dem)
+            int yOffset = 10;
+            foreach (var chat in Server.Instance.idToClientInfo.Values)
+            {
+                string chatMessage = chat.name + ": " + inputText;  // Tilføj din logik til at hente beskeder fra serveren
+                _spriteBatch.DrawString(font, chatMessage, new Vector2(10, yOffset), Color.Black);
+                yOffset += 20;  // Placer beskederne under hinanden
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
