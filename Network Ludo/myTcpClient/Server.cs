@@ -32,17 +32,6 @@ namespace Ludo_Server
         //server.Start();
         //Console.WriteLine("Server started... listening on port 12000");
 
-        void SendToClients(string message, params ClientInfo[] clients)
-    {
-            byte[] data = MessagePackSerializer.Serialize(message);
-            foreach (ClientInfo client in clients)
-            {
-                //Send the length of the message as 4 - byte integer
-                client.writer.Write(data.Length);
-                client.writer.Write(data);
-                client.writer.Flush();
-            }
-        }
 
         void MovePieceForClients(int message, params ClientInfo[] clients)
         {
@@ -57,14 +46,25 @@ namespace Ludo_Server
         }
 
         public void HandleClient(TcpClient client)
-    {
-        Guid clientId = Guid.NewGuid();
+        {
+            Guid clientId = Guid.NewGuid();
 
-        BinaryWriter writer = new BinaryWriter(client.GetStream());
-        BinaryReader reader = new BinaryReader(client.GetStream());
+            BinaryWriter writer = new BinaryWriter(client.GetStream());
+            BinaryReader reader = new BinaryReader(client.GetStream());
+
+            List<string> chatLog = new List<string>();
 
             try
             {
+
+                if (chatLog.Count > 0)
+                {
+                    foreach (var message in chatLog)
+                    {
+                        SendToClient(message, writer);
+                    }
+                }
+
                 while (client.Connected)
                 {
                     int messageLength = reader.ReadInt32();
@@ -88,6 +88,7 @@ namespace Ludo_Server
                             ChatMessage chatMsg = MessagePackSerializer.Deserialize<ChatMessage>(payLoadAsBytes);
                             string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
                             Console.WriteLine(chatMsgWithName);
+                            chatLog.Add(chatMsgWithName);
                             SendToClients(chatMsgWithName, idToClientInfo.Values.ToArray());
                             break;
                         case MessageType.List:
@@ -133,7 +134,25 @@ namespace Ludo_Server
             }
 
         }
+        private void SendToClient(string message, BinaryWriter writer)
+        {
+            byte[] data = MessagePackSerializer.Serialize(message);
+            writer.Write(data.Length);
+            writer.Write(data);
+            writer.Flush();
+        }
+        private void SendToClients(string message, params ClientInfo[] clients)
+        {
+            byte[] data = MessagePackSerializer.Serialize(message);
+            foreach (ClientInfo client in clients)
+            {
+                client.writer.Write(data.Length);
+                client.writer.Write(data);
+                client.writer.Flush();
+            }
+        }
 
+    }
 }
-}
+
 

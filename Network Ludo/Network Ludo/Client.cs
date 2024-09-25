@@ -32,12 +32,14 @@ namespace myClientTCP
             //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
             //client.Connect("192.168.87.116", 12000); 10.131.66.102
-            client.Connect("10.131.66.102", 12000);
+            client.Connect("10.131.66.112", 12000);
         }
-
+        public BinaryReader reader;
         public void RunOnce()
         {
             writer = new BinaryWriter(client.GetStream());
+            reader = new BinaryReader(client.GetStream());
+
             while (test == true)
             {
                 string userName = "bob"; //my change
@@ -83,25 +85,63 @@ namespace myClientTCP
             BinaryReader reader = new BinaryReader(client.GetStream());
             while (client.Connected)
             {
-                int messageLength = reader.ReadInt32();
-                byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
-                string message = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
-                if (message == "CodeRoll1" || message == "CodeRoll2" || message == "CodeRoll3" || message == "CodeRoll4" || message == "CodeRoll5" || message == "CodeRoll6")
+                try
                 {
-                    message = message.Remove(0, 8);
-                    if (Int32.Parse(message) >= 1 && Int32.Parse(message) <= 6)
+                    int messageLength = reader.ReadInt32();  // Læs længden af beskeden
+                    byte messageType = reader.ReadByte();    // Læs typen af beskeden
+                    byte[] payLoadAsBytes = reader.ReadBytes(messageLength);  // Læs beskeden som bytearray
+
+                    MessageType recievedType = (MessageType)messageType;
+
+                    switch (recievedType)
                     {
-                        int returnedRoll = Int32.Parse(message);
-                        ClientGameWorld.Instance.CheckState(returnedRoll);
+                        case MessageType.Chat:
+                            ChatMessage chatMessage = MessagePackSerializer.Deserialize<ChatMessage>(payLoadAsBytes);
+                            Console.WriteLine("Chat: " + chatMessage.message);
+                            // Opdater chat UI eller lignende her
+                            break;
+
+                        case MessageType.List:
+                            string clientList = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
+                            Console.WriteLine("Client List: " + clientList);
+                            // Håndter listen af klienter her
+                            break;
+
+                        case MessageType.Roll:
+                            string rollMessage = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
+                            HandleRollMessage(rollMessage);
+                            break;
+
+                        default:
+                            Console.WriteLine("Unknown message type received");
+                            break;
                     }
                 }
-
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error receiving message: " + ex.Message);
+                    break;
+                }
             }
-            if (client.Connected == false)
+            if (!client.Connected)
             {
-                Console.WriteLine("no more client");
+                Console.WriteLine("Client disconnected.");
             }
         }
+
+        // Håndter Roll-beskeder specifikt
+        void HandleRollMessage(string message)
+        {
+            if (message.StartsWith("CodeRoll"))
+            {
+                message = message.Remove(0, 8); // Fjern "CodeRoll" præfix
+                if (int.TryParse(message, out int rollResult) && rollResult >= 1 && rollResult <= 6)
+                {
+                    ClientGameWorld.Instance.CheckState(rollResult);
+                }
+            }
+        }
+
 
         public void SendMessage(BinaryWriter writer, Message message)
         {
