@@ -87,9 +87,9 @@ namespace myClientTCP
             {
                 try
                 {
-                    int messageLength = reader.ReadInt32();  // Læs længden af beskeden
-                    byte messageType = reader.ReadByte();    // Læs typen af beskeden
-                    byte[] payLoadAsBytes = reader.ReadBytes(messageLength);  // Læs beskeden som bytearray
+                    int messageLength = reader.ReadInt32();
+                    byte messageType = reader.ReadByte();
+                    byte[] payLoadAsBytes = reader.ReadBytes(messageLength);
 
                     MessageType recievedType = (MessageType)messageType;
 
@@ -98,13 +98,13 @@ namespace myClientTCP
                         case MessageType.Chat:
                             ChatMessage chatMessage = MessagePackSerializer.Deserialize<ChatMessage>(payLoadAsBytes);
                             Console.WriteLine("Chat: " + chatMessage.message);
-                            // Opdater chat UI eller lignende her
+
                             break;
 
                         case MessageType.List:
                             string clientList = MessagePackSerializer.Deserialize<string>(payLoadAsBytes);
                             Console.WriteLine("Client List: " + clientList);
-                            // Håndter listen af klienter her
+
                             break;
 
                         case MessageType.Roll:
@@ -166,11 +166,11 @@ namespace myClientTCP
                     break;
             }
 
-            //Send the length of the message as 4 - byte integer
+
             writer.Write(data.Length);
-            // Send the type as a single byte
+
             writer.Write((byte)message.type);
-            // Send rest of data
+
             writer.Write(data);
 
             writer.Flush();
