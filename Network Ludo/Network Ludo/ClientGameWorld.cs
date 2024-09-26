@@ -45,6 +45,7 @@ namespace myClientTCP
 
         private List<GameObject> destroyedGameObjects = new List<GameObject>();
         public float DeltaTime { get; private set; }
+        private float timeElapsed;
         public GraphicsDeviceManager Graphics { get => _graphics; set => _graphics = value; }
 
         public static GameState TurnOrder;
@@ -73,8 +74,6 @@ namespace myClientTCP
 
         Color[] colors = new Color[] { Color.White, Color.Black, Color.Red, Color.Purple, Color.PaleGreen, Color.Yellow, Color.Orange, Color.Pink };
         List<GameObject> colorButtons = new List<GameObject>();
-
-        private float timeElapsed;
 
         public static SpriteFont font;
 
@@ -135,7 +134,7 @@ namespace myClientTCP
 
             for (int i = 0; i < 4; i++)
             {
-                GameObject ludoPiece = LudoPieceFactory.Instance.Create("", Color.White);
+                GameObject ludoPiece = LudoPieceFactory.Instance.Create("", Color.Green);
                 gameObjects.Add(ludoPiece);
                 pieceList.Add(ludoPiece);
 
@@ -190,6 +189,9 @@ namespace myClientTCP
 
             mouseState = Mouse.GetState();
 
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            timeElapsed += DeltaTime;
+
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 isPressed = true;
@@ -209,7 +211,7 @@ namespace myClientTCP
             }
 
 
-            if (keyState.IsKeyDown(Keys.B))
+            if (keyState.IsKeyDown(Keys.B) && timeElapsed >= 1)
             {
                 int myDiceRoll = 5;
                 string myDiceRollString = myDiceRoll.ToString();
@@ -217,6 +219,7 @@ namespace myClientTCP
                 {
                     roll = myDiceRollString
                 });
+                timeElapsed = 0;
             }
 
             foreach (GameObject go in gameObjects)
