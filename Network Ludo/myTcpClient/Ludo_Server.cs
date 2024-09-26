@@ -1,16 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
 namespace Ludo_Server
 {
+    /// <summary>
+    /// Ludo servers GameWorld
+    /// </summary>
     public class Ludo_Server : Game
     {
         private static Ludo_Server instance;
@@ -58,6 +56,9 @@ namespace Ludo_Server
             timeElapsed += DeltaTime;
         }
 
+        /// <summary>
+        /// Handles the joined clients and what to do with them
+        /// </summary>
         private void WhileLoopThread()
         {
             Thread.Sleep(1000);
@@ -70,6 +71,9 @@ namespace Ludo_Server
             }
         }
 
+        /// <summary>
+        /// New thread that waits for other clients to connect
+        /// </summary>
         private void ThreadForWaitingForClient()
         {
             Thread WaitForClient = new Thread(WhileLoopThread);

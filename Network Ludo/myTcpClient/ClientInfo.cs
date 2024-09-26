@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ludo_Server
 {
+    /// <summary>
+    /// Client info for the server to store
+    /// </summary>
     public class ClientInfo
     {
         public string name;

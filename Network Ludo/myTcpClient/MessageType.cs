@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MessagePack;
-using Microsoft.Xna.Framework;
+﻿using MessagePack;
 
 namespace Ludo_Server
 {
+
+    /// <summary>
+    /// The diffrent messages types for the client and server
+    /// </summary>
     public enum MessageType { Join = 0, Chat = 1, List = 2, Roll = 3 , Color = 4}
     [MessagePackObject]
     public abstract class Message
