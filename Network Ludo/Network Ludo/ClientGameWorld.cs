@@ -1,7 +1,5 @@
 ﻿using ComponentPattern;
 using FactoryPattern;
-using CommandPattern;
-using BuilderPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -118,14 +116,8 @@ namespace myClientTCP
             _graphics.ApplyChanges();
             CreateColorBox();
 
-            //Bulding the die, which was later removed. Only staying here if we want to return to the project later on. The same with the command underneath
-            Director director = new Director(new DieBuilder());
-            GameObject dieGo = director.Construct();
-            Die die = dieGo.GetComponent<Die>() as Die;
             turn = 1;
-            gameObjects.Add(dieGo);
 
-            InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
 
             GameObject gridObject = new GameObject();
             Grid grid = gridObject.AddComponent<Grid>(4, 20, 100);
