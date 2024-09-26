@@ -1,14 +1,10 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Net;
 using System.IO;
-using System.Threading;
-using MessagePack;
-using Microsoft.Xna.Framework;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Ludo_Server
 {
@@ -37,19 +33,6 @@ namespace Ludo_Server
         private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
-
-        private List<ClientInfo> joinedPlayers = new List<ClientInfo>();
-        
-        //public int playersJoined;
-
-        //private List<Vector2> startPos = new List<Vector2>() {
-        //    new Vector2(50, 50),
-        //    new Vector2(50, 150),
-        //    new Vector2(50, 250),
-        //    new Vector2(50, 350) };
-
-        //server.Start();
-        //Console.WriteLine("Server started... listening on port 12000");
 
         /// <summary>
         /// SendToClients sends messages to the clients containing data, for instance the value of a roll, or a new player joining the game
@@ -100,7 +83,6 @@ namespace Ludo_Server
                             JoinMessage joinMsg = MessagePackSerializer.Deserialize<JoinMessage>(payLoadAsBytes);
                             ClientInfo newInfoClient = new ClientInfo { name = joinMsg.name, writer = writer, index = index };
                             idToClientInfo.Add(clientId, newInfoClient);
-                            joinedPlayers.Add(newInfoClient);
                             index++;
                             string welcomeMsg = "New user joined!! Welcome: " + joinMsg.name;
                             Console.WriteLine(welcomeMsg);
@@ -121,17 +103,13 @@ namespace Ludo_Server
                             //Afterwards the value of the roll is sent to the clients
                             roll = myRandom.Next(1,7);
                             RollMessage rolledRequest = MessagePackSerializer.Deserialize<RollMessage>(payLoadAsBytes);
-                            //string chatMsgWithName = idToClientInfo[clientId].name + ": " + chatMsg.message;
-                            //Console.WriteLine(chatMsgWithName);
                             string rollMsg = ($"CodeRoll{roll}");
                             SendToClients(rollMsg, idToClientInfo.Values.ToArray());
-                            //MovePieceForClients(roll, idToClientInfo.Values.ToArray());
-                            //ClientGameWorld.Instance.CheckState(roll);
                             break;
                         case MessageType.Color:
                             ColorMessage createPiece = MessagePackSerializer.Deserialize<ColorMessage>(payLoadAsBytes);
                             idToClientInfo[clientId].color = createPiece.pieceColor;
-                            //string rollMsg = ($"CodeRoll{roll}");
+
                             for (int i = 0; i < idToClientInfo.Count; i++)
                             {
                                 string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color} Player {idToClientInfo[clientId].index}");
@@ -150,7 +128,6 @@ namespace Ludo_Server
             finally
             {
                 Console.WriteLine($"Client disconnected: {clientId}");
-                //playersJoined--;
                 client.Dispose();
             }
 

@@ -1,7 +1,5 @@
 ﻿using ComponentPattern;
 using FactoryPattern;
-using CommandPattern;
-using BuilderPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -111,21 +109,14 @@ namespace myClientTCP
         protected override void Initialize()
         {
             client.GetMeGoing();
-            //client.RunOnce();
 
             _graphics.PreferredBackBufferWidth = 11 * 100 + 200;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 11 * 100 + 1;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
             CreateColorBox();
 
-            //Bulding the die, which was later removed. Only staying here if we want to return to the project later on. The same with the command underneath
-            Director director = new Director(new DieBuilder());
-            GameObject dieGo = director.Construct();
-            Die die = dieGo.GetComponent<Die>() as Die;
             turn = 1;
-            gameObjects.Add(dieGo);
 
-            InputHandler.Instance.AddUpdateCommand(Keys.R, new RollCommand(die));
 
             GameObject gridObject = new GameObject();
             Grid grid = gridObject.AddComponent<Grid>(4, 20, 100);
@@ -139,15 +130,6 @@ namespace myClientTCP
                 pieceList.Add(ludoPiece);
 
             }
-            //piece1 = LudoPieceFactory.Instance.Create("", Color.Blue);
-            //piece2 = LudoPieceFactory.Instance.Create("", Color.Green);
-            //piece3 = LudoPieceFactory.Instance.Create("", Color.Red);
-            //piece4 = LudoPieceFactory.Instance.Create("", Color.Yellow);
-
-            //gameObjects.Add(piece1);
-            //gameObjects.Add(piece2);
-            //gameObjects.Add(piece3);
-            //gameObjects.Add(piece4);
 
             pieceList[0].Transform.Position = new Vector2(40, 50);
             pieceList[1].Transform.Position = new Vector2(40, 150);
@@ -386,12 +368,6 @@ namespace myClientTCP
 
         public void CreateColorBox()
         {
-            //for (int i = 0; i < 8; i++)
-            //{
-            //    colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 600 + í * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => JoinLudo(colors[i]), colors[i]));
-            //    //colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2(_graphics.PreferredBackBufferWidth / 2 - 200 + i * 150, _graphics.PreferredBackBufferHeight / 2 - 100), "", () => JoinLudo(colors[colors.Length - 1 - i]), colors[colors.Length - 1 - i]));
-            //}
-
             colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 0 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[0]), colors[0]));
             colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 1 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[1]), colors[1]));
             colorButtons.Add(ButtonFactory.Instance.CreateWithColor(new Vector2((_graphics.PreferredBackBufferWidth / 2) - 525 + 2 * 150, (_graphics.PreferredBackBufferHeight / 2) + 100), "", () => ChangeColor(colors[2]), colors[2]));
