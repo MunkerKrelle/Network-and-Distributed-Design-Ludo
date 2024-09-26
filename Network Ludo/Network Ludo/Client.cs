@@ -37,16 +37,16 @@ namespace myClientTCP
         public void RunOnce(string userName)
         {
             writer = new BinaryWriter(client.GetStream());
-                userName.Replace(" ", "");
-                if (userName.Length > 0)
-                {
+            userName.Replace(" ", "");
+            if (userName.Length > 0)
+            {
 
-                    SendMessage(writer, new JoinMessage { name = userName });
-                    //SendMessage(writer, rollMes);
-                    //Console.WriteLine(rollMes);
+                SendMessage(writer, new JoinMessage { name = userName });
+                //SendMessage(writer, rollMes);
+                //Console.WriteLine(rollMes);
 
-                    //break;
-                }
+                //break;
+            }
             // Start a thread to receive messages
             Thread receiveThread = new Thread(() => ReceiveMessages(client));
             receiveThread.IsBackground = true;
@@ -77,13 +77,23 @@ namespace myClientTCP
                 }
                 else
                 {
-                    ClientGameWorld.Instance.chatBox.Add(message);
-                }
+                    if (message.Contains("is now"))
+                    {
+                        string pieceNumber = message[message.Length - 1];
+                        string colorString = getBetween(message, "now ", "Player");
+                        Color color = ConvertRgbStringToColor(colorString);
+                        ClientGameWorld.Instance.pieceList[pieceNumber].Transform.Color = color;
+                    }
+                    else
+                    {
+                        ClientGameWorld.Instance.chatBox.Add(message);
+                    }
 
-            }
-            if (client.Connected == false)
-            {
-                Console.WriteLine("no more client");
+                }
+                if (client.Connected == false)
+                {
+                    Console.WriteLine("no more client");
+                }
             }
         }
 
@@ -128,5 +138,34 @@ namespace myClientTCP
             writer.Flush();
         }
 
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                int Start, End;
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+
+            return "";
+        }
+
+        public static Color ConvertRgbStringToColor(string rgbString)
+        {
+            // Handle RGB format "R, G, B" or "R G B"
+            var parts = rgbString.Split(new char[] { ',', ' ', ':', 'R', 'G', 'B', 'A', '}', '{' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 4)
+            {
+                int r = int.Parse(parts[0].Trim());
+                int g = int.Parse(parts[1].Trim());
+                int b = int.Parse(parts[2].Trim());
+                int t = int.Parse(parts[3].Trim());
+                return new Color(r, g, b, t);
+            }
+
+            throw new FormatException("Invalid RGB format.");
+        }
     }
 }
+

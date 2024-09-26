@@ -33,6 +33,7 @@ namespace Ludo_Server
             }
         }
 
+        private int index = 0;
         private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
@@ -100,6 +101,7 @@ namespace Ludo_Server
                             ClientInfo newInfoClient = new ClientInfo { name = joinMsg.name, writer = writer };
                             idToClientInfo.Add(clientId, newInfoClient);
                             joinedPlayers.Add(newInfoClient);
+                            index++;
                             string welcomeMsg = "New user joined!! Welcome: " + joinMsg.name;
                             Console.WriteLine(welcomeMsg);
                             SendToClients(welcomeMsg, idToClientInfo.Values.ToArray());
@@ -130,7 +132,7 @@ namespace Ludo_Server
                             ColorMessage createPiece = MessagePackSerializer.Deserialize<ColorMessage>(payLoadAsBytes);
                             idToClientInfo[clientId].color = createPiece.pieceColor;
                             //string rollMsg = ($"CodeRoll{roll}");
-                            string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color}");
+                            string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color} Player {index}");
                             SendToClients(colorMSG, idToClientInfo.Values.ToArray());
                             break;
 
