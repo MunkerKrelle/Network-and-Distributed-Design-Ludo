@@ -1,13 +1,10 @@
-﻿using System.IO;
+﻿using Ludo_Server;
+using MessagePack;
+using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading;
-using Microsoft.Xna.Framework;
-using MessagePack;
-using Ludo_Server;
-using System.Linq;
-
-
 
 namespace myClientTCP
 {
@@ -26,12 +23,7 @@ namespace myClientTCP
         /// </summary>
         public void GetMeGoing()
         {
-            //ClientGameWorld.Instance.myClientsList.Add(client);
-            //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
-            //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
-            //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
-            //client.Connect("192.168.87.116", 12000); 10.131.66.102
-            client.Connect("10.131.66.72", 12000);
+            client.Connect("10.131.65.226", 12000);
         }
 
         public void RunOnce(string userName)
@@ -40,12 +32,7 @@ namespace myClientTCP
             userName.Replace(" ", "");
             if (userName.Length > 0)
             {
-
                 SendMessage(writer, new JoinMessage { name = userName });
-                //SendMessage(writer, rollMes);
-                //Console.WriteLine(rollMes);
-
-                //break;
             }
             // Start a thread to receive messages
             Thread receiveThread = new Thread(() => ReceiveMessages(client));
