@@ -2,15 +2,12 @@
 
 namespace ComponentPattern
 {
-    public enum LudoState
-    {
-        inBase, outBase, finished
-    }
-
-
+    /// <summary>
+    /// The playable piece for the game
+    /// </summary>
     public class LudoPiece : Component
     {
-        public string name;
+        public string name; //Name of the player controlling
         public Color color;
 
         public LudoPiece(GameObject gameObject, string name, Color color) : base(gameObject)
@@ -27,11 +24,6 @@ namespace ComponentPattern
         public override void Update(GameTime gameTime)
         {
 
-        }
-
-        public void Move()
-        {
-            
         }
     }
 }

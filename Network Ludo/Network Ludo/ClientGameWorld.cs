@@ -1,13 +1,11 @@
 ﻿using ComponentPattern;
 using FactoryPattern;
+using Ludo_Server;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Threading;
-using Ludo_Server;
 
 namespace myClientTCP
 {
