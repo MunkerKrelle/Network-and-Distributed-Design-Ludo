@@ -15,5 +15,6 @@ namespace Ludo_Server
         public BinaryWriter writer;
         public string color;
         public Vector2 position;
+        public int index;
     }
 }

@@ -98,7 +98,7 @@ namespace Ludo_Server
                     {
                         case MessageType.Join:
                             JoinMessage joinMsg = MessagePackSerializer.Deserialize<JoinMessage>(payLoadAsBytes);
-                            ClientInfo newInfoClient = new ClientInfo { name = joinMsg.name, writer = writer };
+                            ClientInfo newInfoClient = new ClientInfo { name = joinMsg.name, writer = writer, index = index };
                             idToClientInfo.Add(clientId, newInfoClient);
                             joinedPlayers.Add(newInfoClient);
                             index++;
@@ -132,8 +132,11 @@ namespace Ludo_Server
                             ColorMessage createPiece = MessagePackSerializer.Deserialize<ColorMessage>(payLoadAsBytes);
                             idToClientInfo[clientId].color = createPiece.pieceColor;
                             //string rollMsg = ($"CodeRoll{roll}");
-                            string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color} Player {index}");
-                            SendToClients(colorMSG, idToClientInfo.Values.ToArray());
+                            for (int i = 0; i < idToClientInfo.Count; i++)
+                            {
+                                string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color} Player {idToClientInfo[clientId].index}");
+                                SendToClients(colorMSG, idToClientInfo.Values.ToArray());
+                            }
                             break;
 
                         default:

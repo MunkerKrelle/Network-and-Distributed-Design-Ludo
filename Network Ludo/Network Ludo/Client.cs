@@ -79,10 +79,12 @@ namespace myClientTCP
                 {
                     if (message.Contains("is now"))
                     {
-                        string pieceNumber = message[message.Length - 1];
+                        string pieceString = message.Substring(message.Length - 1, 1);
+
+                        int pieceNumber = int.Parse(pieceString);
                         string colorString = getBetween(message, "now ", "Player");
                         Color color = ConvertRgbStringToColor(colorString);
-                        ClientGameWorld.Instance.pieceList[pieceNumber].Transform.Color = color;
+                        ClientGameWorld.Instance.pieceList[pieceNumber-1].Transform.Color = color;
                     }
                     else
                     {
