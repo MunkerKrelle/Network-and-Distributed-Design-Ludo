@@ -320,7 +320,7 @@ namespace myClientTCP
 
             for (int i = 0; i < chatBox.Count; i++)
             {
-                _spriteBatch.DrawString(font, chatBox[i], new Vector2(800, 500 + 20 * i), Color.Black, 0, Origin(chatBox[i]), 1, SpriteEffects.None, 1f);
+                _spriteBatch.DrawString(font, chatBox[i], new Vector2(1000, 500 + 20 * i), Color.Black, 0, Origin(chatBox[i]), 1, SpriteEffects.None, 1f);
             }
 
 
