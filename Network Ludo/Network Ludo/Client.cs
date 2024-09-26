@@ -84,7 +84,7 @@ namespace myClientTCP
                         int pieceNumber = int.Parse(pieceString);
                         string colorString = getBetween(message, "now ", "Player");
                         Color color = ConvertRgbStringToColor(colorString);
-                        ClientGameWorld.Instance.pieceList[pieceNumber-1].Transform.Color = color;
+                        ClientGameWorld.Instance.pieceList[pieceNumber].Transform.Color = color;
                     }
                     else
                     {
