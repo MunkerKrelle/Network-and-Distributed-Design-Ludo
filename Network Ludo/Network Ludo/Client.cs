@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using MessagePack;
 using Ludo_Server;
 using System.Linq;
+using System.Collections.Generic;
 
 
 
@@ -30,8 +31,7 @@ namespace myClientTCP
             //ClientGameWorld.Instance.myClientsList[0].Connect("localhost", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("10.131.67.156", 12000);
             //ClientGameWorld.Instance.myClientsList[0].Connect("192.168.87.116", 12000);
-            //client.Connect("192.168.87.116", 12000); 10.131.66.102
-            client.Connect("10.131.66.102", 12000);
+            client.Connect("10.131.65.226", 12000);
         }
 
         public void RunOnce(string userName)
@@ -75,6 +75,17 @@ namespace myClientTCP
                         ClientGameWorld.Instance.CheckState(returnedRoll);
                     }
                 }
+                if (message.EndsWith("code")) 
+                {
+                    //var lol = Server.Instance.idToClientInfo.Values;
+                  
+                    foreach (ClientInfo clients in Server.Instance.idToClientInfo.Values)
+                    {
+                        clients.color = Color.Red.ToString();
+                    }
+                }
+
+
 
             }
             if (client.Connected == false)

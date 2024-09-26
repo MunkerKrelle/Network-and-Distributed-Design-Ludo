@@ -32,12 +32,12 @@ namespace Ludo_Server
                 return instance;
             }
         }
-
-        private Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
+        private object locker;
+        public Dictionary<Guid, ClientInfo> idToClientInfo = new Dictionary<Guid, ClientInfo>();
 
         public TcpListener server = new TcpListener(IPAddress.Any, 12000);
 
-        private List<ClientInfo> joinedPlayers = new List<ClientInfo>();
+        public List<ClientInfo> joinedPlayers = new List<ClientInfo>();
         
         //public int playersJoined;
 
@@ -99,7 +99,8 @@ namespace Ludo_Server
                             JoinMessage joinMsg = MessagePackSerializer.Deserialize<JoinMessage>(payLoadAsBytes);
                             ClientInfo newInfoClient = new ClientInfo { name = joinMsg.name, writer = writer };
                             idToClientInfo.Add(clientId, newInfoClient);
-                            joinedPlayers.Add(newInfoClient);
+                            idToClientInfo[clientId].clientID = clientId;
+                            //joinedPlayers.Add(newInfoClient);
                             string welcomeMsg = "New user joined!! Welcome: " + joinMsg.name;
                             Console.WriteLine(welcomeMsg);
                             SendToClients(welcomeMsg, idToClientInfo.Values.ToArray());
@@ -129,8 +130,11 @@ namespace Ludo_Server
                         case MessageType.Color:
                             ColorMessage createPiece = MessagePackSerializer.Deserialize<ColorMessage>(payLoadAsBytes);
                             idToClientInfo[clientId].color = createPiece.pieceColor;
-                            //string rollMsg = ($"CodeRoll{roll}");
-                            string colorMSG = ($"{idToClientInfo[clientId].name} is now {idToClientInfo[clientId].color}");
+                            //string colorMSG = ($"{idToClientInfo[clientId].name} + {idToClientInfo[clientId].color} + code");
+                            //SendToClients(colorMSG, idToClientInfo.Values.ToArray());
+                            idToClientInfo.TryGetValue(clientId,out newInfoClient);
+                            
+                            string colorMSG = ($"{idToClientInfo[clientId].name} + {idToClientInfo[clientId].color} + code");
                             SendToClients(colorMSG, idToClientInfo.Values.ToArray());
                             break;
 
