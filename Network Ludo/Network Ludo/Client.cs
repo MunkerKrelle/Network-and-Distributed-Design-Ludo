@@ -23,7 +23,9 @@ namespace myClientTCP
         /// </summary>
         public void GetMeGoing()
         {
-            client.Connect("10.131.65.226", 12000);
+
+            client.Connect("localhost", 12000);
+
         }
 
         public void RunOnce(string userName)
