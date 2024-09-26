@@ -128,7 +128,6 @@ namespace Ludo_Server
             finally
             {
                 Console.WriteLine($"Client disconnected: {clientId}");
-                //playersJoined--;
                 client.Dispose();
             }
 
